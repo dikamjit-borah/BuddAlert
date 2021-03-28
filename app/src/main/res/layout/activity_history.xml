@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.HistoryActivity">
+    <androidx.cardview.widget.CardView
+        android:elevation="@dimen/cardElevation"
+        app:cardCornerRadius="@dimen/cardRadius"
+        android:layout_margin="@dimen/marginParent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+            <androidx.coordinatorlayout.widget.CoordinatorLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_history_ac_history"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+>
+
+                </androidx.recyclerview.widget.RecyclerView>                <TextView
+                    android:layout_gravity="center"
+                    android:text="No history currently"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                </TextView>
+
+            </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>

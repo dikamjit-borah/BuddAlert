@@ -1,29 +1,37 @@
 package com.hobarb.locatadora.activities
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.common.api.Status
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
+import com.google.android.material.button.MaterialButton
+import com.google.firebase.firestore.FirebaseFirestore
 import com.hobarb.locatadora.R
 import com.hobarb.locatadora.utilities.CONSTANTS
+import com.hobarb.locatadora.utilities.GlobalFunctions
 import com.hobarb.locatadora.utilities.secrets
 import java.util.*
 
+
 class SelectDestinationActivity : AppCompatActivity() {
+
+    lateinit var error_tv:TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_select_destination)
 
-        val destination:TextView = findViewById(R.id.tv_destination_ac_selDest)
-        val latLong:TextView = findViewById(R.id.tv_latLong_ac_selDest)
+        error_tv = findViewById(R.id.tv_error_ac_selDest)
+
+        val destination: TextView = findViewById(R.id.tv_destination_ac_selDest)
+        val latLong: TextView = findViewById(R.id.tv_latLong_ac_selDest)
 
         if (!Places.isInitialized()) {
-            Places.initialize(getApplicationContext(), secrets.API_KEY, Locale.US);
+            Places.initialize(applicationContext, secrets.API_KEY, Locale.US)
         }
 
 
@@ -35,25 +43,68 @@ class SelectDestinationActivity : AppCompatActivity() {
                     as AutocompleteSupportFragment
 
         // Specify the types of place data to return.
-        autocompleteFragment.setPlaceFields(listOf(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG))
+        autocompleteFragment.setPlaceFields(
+            listOf(
+                Place.Field.ID,
+                Place.Field.NAME,
+                Place.Field.LAT_LNG
+            )
+        )
 
         // Set up a PlaceSelectionListener to handle the response.
         autocompleteFragment.setOnPlaceSelectedListener(object : PlaceSelectionListener {
             override fun onPlaceSelected(place: Place) {
                 // TODO: Get info about the selected place.
 
-                destination.setText(""+place.name)
-                latLong.setText(""+place.latLng)
+                destination.text = "" + place.name
+                latLong.text = "" + place.latLng
 
             }
+
 
             override fun onError(status: Status) {
                 // TODO: Handle the error.
-                destination.setText(""+status.statusMessage)
-                latLong.setText(""+status.resolution)
+                destination.text = "" + status.statusMessage
+                latLong.text = "" + status.resolution
 
             }
+
         })
+
+
+        val db = FirebaseFirestore.getInstance()
+
+        val user = db.collection(CONSTANTS.FIRESTORESTUFF.MAINTABLE)
+
+        findViewById<MaterialButton>(R.id.btn_setAlarm_ac_login).setOnClickListener {
+            val locationData = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                try {
+                    hashMapOf(
+                        CONSTANTS.MAPKEYS.DATETIME to GlobalFunctions.getDateTime(),
+                        CONSTANTS.MAPKEYS.LOCATION to findViewById<TextView>(R.id.tv_destination_ac_selDest).text.toString(),
+                        CONSTANTS.MAPKEYS.LATLNG to findViewById<TextView>(R.id.tv_latLong_ac_selDest).text.toString()
+                    )
+                }
+                catch (e:Exception)
+                {
+                    error_tv.setText("*"+e)
+                }
+
+
+            } else {
+                error_tv.setText("*This app works on Android 8 and above");
+
+            }
+
+            user.document(CONSTANTS.FIRESTORESTUFF.USERID).collection(CONSTANTS.FIRESTORESTUFF.HISTORY).add(locationData).addOnSuccessListener { documentReference ->
+                    Toast.makeText(applicationContext, "Alarm set!", Toast.LENGTH_SHORT).show()
+                }
+                .addOnFailureListener { e ->
+                    Toast.makeText(applicationContext, "Error - " + e.message, Toast.LENGTH_SHORT).show()
+                }
+
+        }
+
 
     }
 }
