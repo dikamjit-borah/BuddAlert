@@ -53,7 +53,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="No destination selected"
-                    android:textSize="24sp"
+                    android:textSize="@dimen/titleSize"
                     android:textStyle="bold"></TextView>
 
             </LinearLayout>
@@ -74,16 +74,24 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="N/A"
-                    android:textSize="24sp"
+                    android:textSize="@dimen/titleSize"
                     android:textStyle="bold"></TextView>
 
-
             </LinearLayout>
+
+            <TextView
+                android:visibility="invisible"
+                android:id="@+id/tv_error_ac_selDest"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/marginParent"
+                android:text="*Error text"
+                android:textColor="#F44336"></TextView>
 
             <com.google.android.material.button.MaterialButton
 
                 android:layout_marginTop="@dimen/marginParent"
-                android:id="@+id/btn_ac_login"
+                android:id="@+id/btn_setAlarm_ac_login"
 
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
