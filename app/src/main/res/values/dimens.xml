@@ -4,4 +4,5 @@
     <dimen name="cardRadius">8dp</dimen>
     <dimen name="cardElevation">8dp</dimen>
     <dimen name="titleSize">24sp</dimen>
+    <dimen name="cardBottomMargin">2dp</dimen>
 </resources>
