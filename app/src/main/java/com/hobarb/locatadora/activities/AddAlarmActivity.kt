@@ -1,6 +1,10 @@
 package com.hobarb.locatadora.activities
 
 import android.os.Bundle
+import android.view.View
+import android.widget.LinearLayout
+import android.widget.SeekBar
+import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -10,6 +14,7 @@ import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.firebase.firestore.FirebaseFirestore
 import com.hobarb.locatadora.R
 import com.hobarb.locatadora.utilities.CONSTANTS
@@ -18,12 +23,12 @@ import com.hobarb.locatadora.utilities.secrets
 import java.util.*
 
 
-class SelectDestinationActivity : AppCompatActivity() {
+class AddAlarmActivity : AppCompatActivity() {
 
     lateinit var error_tv:TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_select_destination)
+        setContentView(R.layout.activity_add_alarm)
 
         error_tv = findViewById(R.id.tv_error_ac_selDest)
 
@@ -72,6 +77,38 @@ class SelectDestinationActivity : AppCompatActivity() {
         })
 
 
+        val switch = findViewById<SwitchMaterial>(R.id.sw_notify_ac_addAlarm)
+        val interval_ll = findViewById<LinearLayout>(R.id.ll_interval_ac_addAlarm)
+        switch.setOnClickListener{
+            if(switch.isChecked)
+            {
+                interval_ll.visibility = View.VISIBLE
+            }
+            else
+            {
+                interval_ll.visibility = View.INVISIBLE 
+            }
+        }
+
+        val interval_sb = findViewById<SeekBar>(R.id.sb_interval_ac_addAlarm)
+        val interval_tv = findViewById<TextView>(R.id.tv_interval_ac_addAlarm)
+        interval_tv.setText(interval_sb.getProgress().toString() + " mins")
+        interval_sb.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
+            var pval = 0
+            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                pval = progress
+                interval_tv.setText(pval.toString() + " mins")
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar) {
+                //interval_tv.setText(pval.toString() + "/" + seekBar.max)
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar) {
+               // interval_tv.setText(pval.toString() + "/" + seekBar.max)
+            }
+        })
+
         val db = FirebaseFirestore.getInstance()
 
         val user = db.collection(CONSTANTS.FIRESTORESTUFF.MAINTABLE)
@@ -85,9 +122,9 @@ class SelectDestinationActivity : AppCompatActivity() {
                         CONSTANTS.MAPKEYS.LATLNG to findViewById<TextView>(R.id.tv_latLong_ac_selDest).text.toString()
                     )
                 }
-                catch (e:Exception)
+                catch (e: Exception)
                 {
-                    error_tv.setText("*"+e)
+                    error_tv.setText("*" + e)
                 }
 
 
@@ -96,7 +133,9 @@ class SelectDestinationActivity : AppCompatActivity() {
 
             }
 
-            user.document(CONSTANTS.FIRESTORESTUFF.USERID).collection(CONSTANTS.FIRESTORESTUFF.HISTORY).add(locationData).addOnSuccessListener { documentReference ->
+            user.document(CONSTANTS.FIRESTORESTUFF.USERID).collection(CONSTANTS.FIRESTORESTUFF.HISTORY).add(
+                locationData
+            ).addOnSuccessListener { documentReference ->
                     Toast.makeText(applicationContext, "Alarm set!", Toast.LENGTH_SHORT).show()
                 }
                 .addOnFailureListener { e ->
