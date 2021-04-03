@@ -25,6 +25,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:textColor="@color/white"
                 android:id="@+id/tv_phNo_ac_user"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -32,6 +33,7 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:textColor="@color/white"
                 android:id="@+id/tv_name_ac_user"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -47,10 +49,10 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
         >
 
         <LinearLayout
+            android:layout_marginTop="150dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -58,7 +60,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/marginParent"
-                android:layout_marginTop="150dp"
+
                 android:layout_marginRight="@dimen/marginParent"
                 android:orientation="horizontal">
 
@@ -180,7 +182,7 @@
                     app:cardCornerRadius="@dimen/cardRadius">
 
                     <LinearLayout
-                        android:id="@+id/ll_destHistory_ac_user"
+                        android:id="@+id/ll_reminder_ac_user"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
@@ -189,14 +191,14 @@
                         <ImageView
                             android:layout_width="match_parent"
                             android:layout_height="90dp"
-                            android:src="@drawable/ic_baseline_history_24" />
+                            android:src="@drawable/ic_baseline_sms_24" />
 
                         <TextView
                             android:textColor="#4A00E0"
                             android:gravity="center"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Destinations History">
+                            android:text="Set Reminder">
 
                         </TextView>
                     </LinearLayout>
