@@ -2,4 +2,5 @@
     <string name="app_name">LocataDora</string>
     <string name="sign_phone">Enter phone number</string>
     <string name="title_activity_maps">Map</string>
+    <string name="sign_otp">Enter OTP</string>
 </resources>

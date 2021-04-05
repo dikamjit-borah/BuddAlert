@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.WindowManager
 import com.hobarb.locatadora.activities.LoginActivity
+import com.hobarb.locatadora.activities.PhoneLoginActivity
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,7 +25,7 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
             finish()
-        }, 3000) // 3000 is the delayed time in milliseconds.
+        }, 1000) // 3000 is the delayed time in milliseconds.
 
     }
 }
