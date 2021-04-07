@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/login_bg"
+    tools:context=".activities.PhoneLoginActivity">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/marginParent"
+        app:cardCornerRadius="@dimen/cardRadius"
+        app:cardElevation="@dimen/cardElevation">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/marginParent"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/ic_edit_text_box"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp">
+
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/et_phoneNo_ac_login"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center"
+                    android:autoSizeTextType="uniform"
+                    android:background="@drawable/ic_edit_text_box"
+                    android:digits="1234567890"
+                    android:hint="@string/sign_phone"
+                    android:imeOptions="actionDone"
+                    android:inputType="phone"
+                    android:maxLength="10"
+                    android:paddingStart="42dp"
+                    android:textColor="@color/black"
+                    android:textColorHint="#9090AB"
+                    android:textStyle="normal" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_centerVertical="true"
+                    android:paddingStart="8dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:text="+91"
+                    android:textAlignment="center"
+                    android:textColor="#000000"
+                    android:textSize="18sp"
+                    android:textStyle="normal" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_otp_ac_login"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/ic_edit_text_box"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp">
+
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/et_otp_ac_login"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:autoSizeTextType="uniform"
+                    android:background="@drawable/ic_edit_text_box"
+                    android:digits="1234567890"
+                    android:hint="@string/sign_otp"
+                    android:imeOptions="actionDone"
+                    android:inputType="phone"
+                    android:maxLength="6"
+                    android:textColor="@color/black"
+                    android:textColorHint="#9090AB"
+                    android:textStyle="normal" />
+            </RelativeLayout>
+
+            <com.google.android.material.button.MaterialButton
+
+                android:id="@+id/btn_ac_login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_button"
+                android:padding="8dp"
+                android:text="Send OTP"
+                android:textStyle="bold">
+
+            </com.google.android.material.button.MaterialButton>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:visibility="gone"
+                android:textColor="#4A00E0"
+                android:id="@+id/btn_continue_ac_login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/ic_button_outline"
+                android:padding="8dp"
+                android:text="Continue"
+                android:textStyle="bold">
+
+            </androidx.appcompat.widget.AppCompatButton>
+
+        </LinearLayout>
+
+
+    </androidx.cardview.widget.CardView>
+</LinearLayout>

@@ -4,78 +4,116 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/login_bg"
-    tools:context=".activities.LoginActivity">
+    tools:context=".activities.LoginActivity"
+    android:background="@drawable/login_bg">
 
     <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+
+
         android:layout_gravity="center"
+
         android:layout_margin="@dimen/marginParent"
-        app:cardCornerRadius="@dimen/cardRadius"
-        app:cardElevation="@dimen/cardElevation">
-
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
         <LinearLayout
+            android:background="@drawable/outline"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/marginParent"
-            android:orientation="vertical">
-
-            <RelativeLayout
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:background="@drawable/outline"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/ic_edit_text_box"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp">
-
-
-                <androidx.appcompat.widget.AppCompatEditText
-                    android:id="@+id/et_phoneNo_ac_login"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center_horizontal"
-                    android:autoSizeTextType="uniform"
-                    android:background="@drawable/ic_edit_text_box"
-                    android:digits="1234567890"
-                    android:hint="@string/sign_phone"
-                    android:imeOptions="actionDone"
-                    android:inputType="phone"
-                    android:maxLength="10"
-                    android:paddingStart="42dp"
-                    android:textColor="@color/black"
-                    android:textColorHint="#9090AB"
-                    android:textStyle="normal" />
+                android:layout_height="wrap_content">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_centerVertical="true"
-                    android:paddingStart="8dp"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"
-                    android:text="+91"
-                    android:textAlignment="center"
-                    android:textColor="#000000"
-                    android:textSize="18sp"
-                    android:textStyle="normal" />
+                    android:layout_margin="@dimen/marginParent"
+                    android:gravity="center"
+                    android:textSize="@dimen/titleSize"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Sign in"
+                    android:textStyle="bold"
+                    android:textColor="#4A00E0">
 
-            </RelativeLayout>
+                </TextView>
 
-            <com.google.android.material.button.MaterialButton
-
-                android:id="@+id/btn_ac_login"
+            </LinearLayout>
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_signInWithGoogle"
+                android:layout_margin="@dimen/marginParent"
+                android:elevation="@dimen/cardElevation"
 
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/ic_button"
-                android:padding="8dp"
-                android:text="Continue"
-                android:textStyle="bold">
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:padding="8dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <ImageView 
+                        android:layout_width="@dimen/login_icon_size"
+                        android:layout_height="@dimen/login_icon_size"
+                        android:src="@drawable/iconfinder_google">
 
-            </com.google.android.material.button.MaterialButton>
+                    </ImageView>
+                    <TextView
+                        android:textColor="@color/black"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="Sign in with Google">
+
+                    </TextView>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_signInWithPhone"
+                android:layout_marginLeft="@dimen/marginParent"
+                android:layout_marginRight="@dimen/marginParent"
+                android:layout_marginBottom="@dimen/marginParent"
+
+                android:elevation="@dimen/cardElevation"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:padding="8dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="@dimen/login_icon_size"
+                        android:layout_height="@dimen/login_icon_size"
+                        android:src="@drawable/iconfinder_phone">
+
+                    </ImageView>
+                    <TextView
+                        android:textColor="@color/black"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="Sign in with Phone Number">
+
+                    </TextView>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
         </LinearLayout>
 
 
     </androidx.cardview.widget.CardView>
+
+
+
+
+
 </LinearLayout>

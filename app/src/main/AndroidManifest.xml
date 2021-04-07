@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.READ_CONTACTS"></uses-permission>
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -20,7 +20,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LocataDora">
-        <activity android:name=".activities.ContactsActivity"/>
+        <activity android:name=".activities.LoginActivity"></activity>
+        <activity android:name=".activities.ContactsActivity" />
         <activity android:name=".activities.HistoryActivity" />
         <activity android:name=".activities.AddAlarmActivity" />
         <!--
@@ -39,7 +40,7 @@
             android:name=".activities.MapsActivity"
             android:label="@string/title_activity_maps" />
         <activity android:name=".activities.UserActivity" />
-        <activity android:name=".activities.LoginActivity" />
+        <activity android:name=".activities.PhoneLoginActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
