@@ -20,7 +20,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LocataDora">
-        <activity android:name=".activities.LoginActivity"></activity>
+        <activity android:name=".activities.AddReminderActivity"></activity>
+        <activity android:name=".activities.RemindersActivity"></activity>
+        <activity android:name=".activities.LoginActivity" />
         <activity android:name=".activities.ContactsActivity" />
         <activity android:name=".activities.HistoryActivity" />
         <activity android:name=".activities.AddAlarmActivity" />

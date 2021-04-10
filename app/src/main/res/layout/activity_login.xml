@@ -34,7 +34,7 @@
                     android:layout_height="wrap_content"
                     android:text="Sign in"
                     android:textStyle="bold"
-                    android:textColor="#4A00E0">
+                    android:textColor="@color/primary2">
 
                 </TextView>
 

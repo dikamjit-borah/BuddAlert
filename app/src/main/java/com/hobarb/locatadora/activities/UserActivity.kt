@@ -15,6 +15,7 @@ class UserActivity : AppCompatActivity() {
         val addLocAlarm:LinearLayout = findViewById(R.id.ll_addLocAlarm_ac_user);
         val destHistory:LinearLayout = findViewById(R.id.ll_destHistory_ac_user);
         val contacts:LinearLayout = findViewById(R.id.ll_addContacts_ac_user);
+        val reminders:LinearLayout = findViewById(R.id.ll_reminder_ac_user);
 
         addLocAlarm.setOnClickListener {
             val intent = Intent(this,AddAlarmActivity::class.java)
@@ -28,6 +29,11 @@ class UserActivity : AppCompatActivity() {
 
         contacts.setOnClickListener {
             val intent = Intent(this,ContactsActivity::class.java)
+            startActivity(intent)
+        }
+
+        reminders.setOnClickListener {
+            val intent = Intent(this,RemindersActivity::class.java)
             startActivity(intent)
         }
 
