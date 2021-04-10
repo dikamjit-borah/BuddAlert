@@ -6,7 +6,7 @@ Locatadora is an android application to set alarms for destinations. Users can s
 <br>
 
 
-## Technical Specifications##
+## Technical Specifications
 Locatadora uses Google Maps Places API to fetch location attributes. The entire backend is handled with the help of Firebase. Firebase authentication service is used for signing in with phone number and Google. The data for every user is stored in a Firebase Firestore collection with the ID generated during the login process as the "primary?" key.
 
 ## System diagram
