@@ -27,15 +27,15 @@ class LoginActivity : AppCompatActivity() {
 
         auth = Firebase.auth
 
-        findViewById<CardView>(R.id.cv_signInWithGoogle).setOnClickListener{
+        findViewById<CardView>(R.id.cv_signInWithGoogle).setOnClickListener {
 
-                configureGoogleSignIn()
+            configureGoogleSignIn()
             signIn()
 
-                Toast.makeText(applicationContext, "Sign in with Google", Toast.LENGTH_SHORT).show()
+            Toast.makeText(applicationContext, "Sign in with Google", Toast.LENGTH_SHORT).show()
 
         }
-        findViewById<CardView>(R.id.cv_signInWithPhone).setOnClickListener{
+        findViewById<CardView>(R.id.cv_signInWithPhone).setOnClickListener {
 
             val intent = Intent(this@LoginActivity, PhoneLoginActivity::class.java)
             startActivity(intent)
@@ -72,7 +72,7 @@ class LoginActivity : AppCompatActivity() {
             } catch (e: ApiException) {
                 // Google Sign In failed, update UI appropriately
                 //Log.w(TAG, "Google sign in failed", e)
-                Toast.makeText(applicationContext, ""+e.message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, "" + e.message, Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -97,7 +97,8 @@ class LoginActivity : AppCompatActivity() {
 
     private fun updateUI(user: FirebaseUser?) {
 
-        Toast.makeText(applicationContext, "Signed in as "+user!!.displayName, Toast.LENGTH_SHORT).show()
+        Toast.makeText(applicationContext, "Signed in as " + user!!.displayName, Toast.LENGTH_SHORT)
+            .show()
         goToUserActivity()
 
 
@@ -111,6 +112,7 @@ class LoginActivity : AppCompatActivity() {
             goToUserActivity()
         }
     }
+
     private fun goToUserActivity() {
         val intent = Intent(this@LoginActivity, UserActivity::class.java)
         startActivity(intent)

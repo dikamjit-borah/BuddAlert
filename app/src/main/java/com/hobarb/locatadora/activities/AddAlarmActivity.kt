@@ -19,6 +19,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.hobarb.locatadora.R
 import com.hobarb.locatadora.utilities.CONSTANTS
 import com.hobarb.locatadora.utilities.GlobalFunctions
+import com.hobarb.locatadora.utilities.SharedPrefs
 import com.hobarb.locatadora.utilities.secrets
 import java.util.*
 
@@ -133,7 +134,9 @@ class AddAlarmActivity : AppCompatActivity() {
 
             }
 
-            user.document(CONSTANTS.FIRESTORESTUFF.USERID).collection(CONSTANTS.FIRESTORESTUFF.HISTORY).add(
+            val sharedPrefs = SharedPrefs(applicationContext)
+            val identifier = sharedPrefs.readPrefs(CONSTANTS.SHARED_PREF_KEYS.IDENTIFIER)
+            user.document(identifier).collection(CONSTANTS.FIRESTORESTUFF.HISTORY).add(
                 locationData
             ).addOnSuccessListener { documentReference ->
                     Toast.makeText(applicationContext, "Alarm set!", Toast.LENGTH_SHORT).show()

@@ -26,18 +26,18 @@
 
             <TextView
                 android:textColor="@color/white"
-                android:id="@+id/tv_phNo_ac_user"
+                android:id="@+id/tv_userUid_ac_user"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Phone Number"
+                android:text="User UID"
                 android:textStyle="bold" />
 
             <TextView
                 android:textColor="@color/white"
-                android:id="@+id/tv_name_ac_user"
+                android:id="@+id/tv_identifier_ac_user"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="User Name"
+                android:text="Identifier"
                 android:textSize="@dimen/titleSize"
                 android:textStyle="bold" />
 

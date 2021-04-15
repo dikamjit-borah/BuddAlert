@@ -6,4 +6,5 @@
     <dimen name="titleSize">24sp</dimen>
     <dimen name="cardBottomMargin">2dp</dimen>
     <dimen name="login_icon_size">40dp</dimen>
+    <dimen name="icon_size">40dp</dimen>
 </resources>
