@@ -6,6 +6,6 @@
 
     </stroke>
 
-    <corners android:radius="@dimen/cardview_default_radius"></corners>
+    <corners android:bottomRightRadius="@dimen/cardview_default_radius" android:topRightRadius="@dimen/cardview_default_radius"></corners>
 
 </shape>

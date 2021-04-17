@@ -15,6 +15,8 @@ import com.google.firebase.auth.*
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.hobarb.locatadora.R
+import com.hobarb.locatadora.utilities.CONSTANTS
+import com.hobarb.locatadora.utilities.SharedPrefs
 import java.util.concurrent.TimeUnit
 
 
@@ -24,6 +26,9 @@ class PhoneLoginActivity : AppCompatActivity() {
     lateinit var et_otp:EditText
     lateinit var btn_continue:AppCompatButton
     lateinit var rl_otp:RelativeLayout
+
+    lateinit var phoneNumber: String
+    lateinit var sharedPrefs: SharedPrefs
 
     private var storedVerificationId: String? = ""
     private lateinit var resendToken: PhoneAuthProvider.ForceResendingToken
@@ -46,6 +51,7 @@ class PhoneLoginActivity : AppCompatActivity() {
         rl_otp = findViewById(R.id.rl_otp_ac_login)
         et_otp = findViewById(R.id.et_otp_ac_login)
         btn_continue.setOnClickListener{
+            Toast.makeText(applicationContext, storedVerificationId, Toast.LENGTH_SHORT).show()
             if (et_otp.text.toString().isNullOrEmpty())
             {
                 Toast.makeText(applicationContext, "Enter OTP", Toast.LENGTH_SHORT).show()
@@ -64,7 +70,8 @@ class PhoneLoginActivity : AppCompatActivity() {
             if (!et_phoneNo.text.isNullOrEmpty() && et_phoneNo.text.length==10)
             {
                 //Toast.makeText(applicationContext, ""+ et_phoneNo.text.toString(), Toast.LENGTH_SHORT).show()
-                loginWithPhone("+91" + et_phoneNo.text.toString())
+                phoneNumber = "+91" + et_phoneNo.text.toString()
+                loginWithPhone(phoneNumber)
             }
 
             else
@@ -95,6 +102,8 @@ class PhoneLoginActivity : AppCompatActivity() {
                             // Sign in success, update UI with the signed-in user's information
                             //Log.d(TAG, "signInWithCredential:success")
 
+                                sharedPrefs = SharedPrefs(applicationContext);
+                                sharedPrefs.writePrefs(CONSTANTS.SHARED_PREF_KEYS.IDENTIFIER, phoneNumber)
                                 goToUserActivity()
 
                             val user = task.result?.user

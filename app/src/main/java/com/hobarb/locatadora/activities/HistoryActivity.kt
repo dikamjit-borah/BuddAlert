@@ -10,12 +10,18 @@ import com.hobarb.locatadora.R
 import com.hobarb.locatadora.adapters.HistoryAdapter
 import com.hobarb.locatadora.models.HistoryModel
 import com.hobarb.locatadora.utilities.CONSTANTS
+import com.hobarb.locatadora.utilities.SharedPrefs
 
 class HistoryActivity : AppCompatActivity() {
 
     lateinit var historyModels:ArrayList<HistoryModel>
     lateinit var recyclerView: RecyclerView
     lateinit var historyAdapter: HistoryAdapter
+
+    lateinit var user_uid:String
+    lateinit var identifier:String
+
+    lateinit var  sharedPrefs: SharedPrefs
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_history)
@@ -24,7 +30,12 @@ class HistoryActivity : AppCompatActivity() {
         historyModels = arrayListOf()
         recyclerView = findViewById(R.id.rv_history_ac_history)
 
-        val docRef = db.collection(CONSTANTS.FIRESTORESTUFF.MAINTABLE).document(CONSTANTS.FIRESTORESTUFF.USERID).collection(CONSTANTS.FIRESTORESTUFF.HISTORY)
+
+        sharedPrefs = SharedPrefs(applicationContext)
+
+        identifier = sharedPrefs.readPrefs(CONSTANTS.SHARED_PREF_KEYS.IDENTIFIER);
+
+        val docRef = db.collection(CONSTANTS.FIRESTORESTUFF.MAINTABLE).document(identifier).collection(CONSTANTS.FIRESTORESTUFF.HISTORY)
         docRef.get()
             .addOnSuccessListener { documents ->
                 if (documents != null) {
@@ -33,7 +44,6 @@ class HistoryActivity : AppCompatActivity() {
 
                         val historyModel = HistoryModel(document.data[CONSTANTS.MAPKEYS.LOCATION].toString(),document.data[CONSTANTS.MAPKEYS.DATETIME].toString())
                         historyModels.add(historyModel)
-                        Toast.makeText(applicationContext, ""+historyModel, Toast.LENGTH_SHORT).show()
 
                     }
 
@@ -47,7 +57,7 @@ class HistoryActivity : AppCompatActivity() {
 
 
                 } else {
-                    Toast.makeText(applicationContext, "not exist", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(applicationContext, "not exist, something wrong", Toast.LENGTH_SHORT).show()
                 }
 
 

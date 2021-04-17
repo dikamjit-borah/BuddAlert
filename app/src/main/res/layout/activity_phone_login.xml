@@ -105,7 +105,7 @@
 
             <androidx.appcompat.widget.AppCompatButton
                 android:visibility="gone"
-                android:textColor="#4A00E0"
+                android:textColor="@color/white"
                 android:id="@+id/btn_continue_ac_login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
