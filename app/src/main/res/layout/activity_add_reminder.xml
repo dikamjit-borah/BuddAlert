@@ -21,9 +21,10 @@
                android:layout_width="match_parent"
                android:layout_height="wrap_content">
                <LinearLayout
+                   android:id="@+id/ll_date_ac_addReminder"
                    android:padding="4dp"
                    android:layout_gravity="center"
-                   android:gravity="center"
+
                     android:background="@drawable/outline_left"
                    android:orientation="horizontal"
                    android:layout_weight="1"
@@ -36,10 +37,12 @@
 
                    </ImageView>
                    <TextView
+                       android:id="@+id/tv_date_ac_addRem"
                        android:layout_gravity="center"
                        android:layout_marginLeft="1dp"
                        android:text="Set Date"
-                       android:layout_width="wrap_content"
+                       android:textAlignment="center"
+                       android:layout_width="match_parent"
                        android:layout_height="wrap_content">
 
                    </TextView>
@@ -47,9 +50,10 @@
 
                </LinearLayout>
                <LinearLayout
+                   android:id="@+id/ll_time_ac_addReminder"
                    android:padding="4dp"
                    android:layout_gravity="center"
-                   android:gravity="center"
+
                    android:background="@drawable/outline_right"
                    android:orientation="horizontal"
                    android:layout_weight="1"
@@ -63,10 +67,12 @@
                    </ImageView>
 
                    <TextView
+                       android:id="@+id/tv_time_ac_addRem"
                        android:layout_gravity="center"
                        android:layout_marginLeft="1dp"
                        android:text="Set Time"
-                       android:layout_width="wrap_content"
+                       android:textAlignment="center"
+                       android:layout_width="match_parent"
                        android:layout_height="wrap_content">
 
                    </TextView>
@@ -90,7 +96,6 @@
                        android:singleLine="true"
                        android:layout_width="match_parent"
                        android:layout_height="wrap_content"
-                       android:inputType="numberDecimal"
                        android:hint="Enter event name"/>
 
                    <LinearLayout
@@ -144,6 +149,7 @@
            </LinearLayout>
 
            <com.google.android.material.button.MaterialButton
+               android:id="@+id/mb_setReminder_ac_addRem"
                android:background="@drawable/ic_button"
                android:layout_width="match_parent"
                android:layout_height="wrap_content"

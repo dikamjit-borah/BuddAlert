@@ -16,6 +16,8 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.hobarb.locatadora.R
+import com.hobarb.locatadora.utilities.CONSTANTS
+import com.hobarb.locatadora.utilities.SharedPrefs
 
 class LoginActivity : AppCompatActivity() {
     lateinit var auth: FirebaseAuth
@@ -99,6 +101,9 @@ class LoginActivity : AppCompatActivity() {
 
         Toast.makeText(applicationContext, "Signed in as " + user!!.displayName, Toast.LENGTH_SHORT)
             .show()
+
+        val sharedPrefs: SharedPrefs = SharedPrefs(applicationContext)
+        sharedPrefs.writePrefs(CONSTANTS.SHARED_PREF_KEYS.IDENTIFIER, user!!.displayName)
         goToUserActivity()
 
 

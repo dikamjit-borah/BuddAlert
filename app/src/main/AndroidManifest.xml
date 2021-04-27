@@ -8,8 +8,7 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
-
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -24,8 +23,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LocataDora">
-        <activity android:name=".activities.AddReminderActivity"></activity>
-        <activity android:name=".activities.RemindersActivity"></activity>
+        <activity android:name=".activities.TrackUserActivity"></activity>
+        <activity android:name=".activities.AddReminderActivity" />
+        <activity android:name=".activities.RemindersActivity" />
         <activity android:name=".activities.LoginActivity" />
         <activity android:name=".activities.ContactsActivity" />
         <activity android:name=".activities.HistoryActivity" />
@@ -58,6 +58,8 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+
+        <service android:name=".services.BackgroundServices" />
     </application>
 
 </manifest>

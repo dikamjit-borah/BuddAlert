@@ -1,5 +1,7 @@
 package com.hobarb.locatadora.activities
 
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.LinearLayout
@@ -15,8 +17,10 @@ import com.google.android.libraries.places.widget.AutocompleteSupportFragment
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.switchmaterial.SwitchMaterial
+import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.hobarb.locatadora.R
+import com.hobarb.locatadora.services.BackgroundServices
 import com.hobarb.locatadora.utilities.CONSTANTS
 import com.hobarb.locatadora.utilities.GlobalFunctions
 import com.hobarb.locatadora.utilities.SharedPrefs
@@ -25,11 +29,13 @@ import java.util.*
 
 
 class AddAlarmActivity : AppCompatActivity() {
-
+    lateinit var serviceIntent: Intent
     lateinit var error_tv:TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_alarm)
+        serviceIntent = Intent(applicationContext, BackgroundServices::class.java)
+
 
         error_tv = findViewById(R.id.tv_error_ac_selDest)
 
@@ -106,7 +112,7 @@ class AddAlarmActivity : AppCompatActivity() {
             }
 
             override fun onStopTrackingTouch(seekBar: SeekBar) {
-               // interval_tv.setText(pval.toString() + "/" + seekBar.max)
+                // interval_tv.setText(pval.toString() + "/" + seekBar.max)
             }
         })
 
@@ -115,38 +121,75 @@ class AddAlarmActivity : AppCompatActivity() {
         val user = db.collection(CONSTANTS.FIRESTORESTUFF.MAINTABLE)
 
         findViewById<MaterialButton>(R.id.btn_setAlarm_ac_login).setOnClickListener {
-            val locationData = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                try {
-                    hashMapOf(
-                        CONSTANTS.MAPKEYS.DATETIME to GlobalFunctions.getDateTime(),
-                        CONSTANTS.MAPKEYS.LOCATION to findViewById<TextView>(R.id.tv_destination_ac_selDest).text.toString(),
-                        CONSTANTS.MAPKEYS.LATLNG to findViewById<TextView>(R.id.tv_latLong_ac_selDest).text.toString()
-                    )
-                }
-                catch (e: Exception)
-                {
-                    error_tv.setText("*" + e)
-                }
-
-
-            } else {
-                error_tv.setText("*This app works on Android 8 and above");
-
-            }
-
-            val sharedPrefs = SharedPrefs(applicationContext)
-            val identifier = sharedPrefs.readPrefs(CONSTANTS.SHARED_PREF_KEYS.IDENTIFIER)
-            user.document(identifier).collection(CONSTANTS.FIRESTORESTUFF.HISTORY).add(
-                locationData
-            ).addOnSuccessListener { documentReference ->
-                    Toast.makeText(applicationContext, "Alarm set!", Toast.LENGTH_SHORT).show()
-                }
-                .addOnFailureListener { e ->
-                    Toast.makeText(applicationContext, "Error - " + e.message, Toast.LENGTH_SHORT).show()
-                }
+            //uploadToHistory(user)
+            goToTrackUserActivity()
+            //getUserCurrentLocation()
 
         }
 
 
+
     }
+
+    private fun getUserCurrentLocation() {
+        //getLastLocation()
+    }
+
+
+
+
+
+    private fun goToTrackUserActivity() {
+        val intent = Intent(this@AddAlarmActivity, TrackUserActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun uploadToHistory(user: CollectionReference) {
+        val locationData = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            try {
+                hashMapOf(
+                    CONSTANTS.MAPKEYS.DATETIME to GlobalFunctions.getDateTime(),
+                    CONSTANTS.MAPKEYS.LOCATION to findViewById<TextView>(R.id.tv_destination_ac_selDest).text.toString(),
+                    CONSTANTS.MAPKEYS.LATLNG to findViewById<TextView>(R.id.tv_latLong_ac_selDest).text.toString()
+                )
+            }
+            catch (e: Exception)
+            {
+                error_tv.setText("*" + e)
+            }
+
+
+        } else {
+            error_tv.setText("*This app works on Android 8 and above");
+
+        }
+
+        val sharedPrefs = SharedPrefs(applicationContext)
+        val identifier = sharedPrefs.readPrefs(CONSTANTS.SHARED_PREF_KEYS.IDENTIFIER)
+        user.document(identifier).collection(CONSTANTS.FIRESTORESTUFF.HISTORY).add(
+            locationData
+        ).addOnSuccessListener { documentReference ->
+            Toast.makeText(applicationContext, "Alarm set!", Toast.LENGTH_SHORT).show()
+            startBackgroundService()
+        }
+            .addOnFailureListener { e ->
+                Toast.makeText(applicationContext, "Error - " + e.message, Toast.LENGTH_SHORT).show()
+            }
+    }
+
+
+    private fun startBackgroundService() {
+
+            //startAudioRecording();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                startForegroundService(serviceIntent)
+            } else {
+                startService(serviceIntent)
+            }
+
+    }
+
+
+
+
 }
