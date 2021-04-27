@@ -25,5 +25,13 @@ public class CONSTANTS {
         public static String HISTORY = "HISTORY";
     }
 
+    public static class ALARM_STUFF{
+        public static String DESTINATION = "";
+        public static int NOTIFY_INTERVAL = 0;
+        public static int CHECK_LOCATION_INTERVAL = 5000;
+
+
+    }
+
 
 }

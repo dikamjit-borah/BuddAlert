@@ -17,4 +17,10 @@ public class GlobalFunctions {
         return (dtf.format(now));
     }
 
+
+
+
+
+
+
 }
