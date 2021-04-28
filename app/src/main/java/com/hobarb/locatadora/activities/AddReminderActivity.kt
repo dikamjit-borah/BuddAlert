@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.datepicker.MaterialDatePicker.Builder.datePicker
 import com.hobarb.locatadora.R
+import com.hobarb.locatadora.controllers.ReminderController
 
 
 class AddReminderActivity : AppCompatActivity() {
@@ -21,6 +22,23 @@ class AddReminderActivity : AppCompatActivity() {
     lateinit var addTimeLL:LinearLayout
     lateinit var dateTv:TextView
     lateinit var timeTv:TextView
+
+    var selDate = "";
+    var selMonth = "";
+    var selYear = "";
+
+    var hour:String = ""
+    var min:String = ""
+    var period:String = ""
+    
+    var eventDate:String = ""
+    var eventTime:String = ""
+
+
+    var eventName:String = ""
+    var eventLocation = ""
+
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,9 +51,7 @@ class AddReminderActivity : AppCompatActivity() {
         addDateLL.setOnClickListener {
             val builder = AlertDialog.Builder(this)
             builder.setTitle("Set the Date ")
-            var selDate = "";
-            var selMonth = "";
-            var selYear = "";
+
             val view: View = LayoutInflater.from(this).inflate(R.layout.layout_datepicker, null)
             builder.setView(view)
             val dp: DatePicker = view.findViewById(R.id.dp_lay_dp)
@@ -48,9 +64,11 @@ class AddReminderActivity : AppCompatActivity() {
             }
             builder.setPositiveButton("Okay") { dialogInterface, which ->
                 if (selMonth != 11.toString() && selMonth != 12.toString())
-                    dateTv.setText(selDate + "-0" + selMonth + "-" + selYear)
+                    eventDate = selDate + "-0" + selMonth + "-" + selYear
                 else
-                    dateTv.setText(selDate + "-" + selMonth + "-" + selYear)
+                    eventDate = selDate + "-" + selMonth + "-" + selYear
+
+                dateTv.setText(""+eventDate)
                 Toast.makeText(applicationContext, "Date Set", Toast.LENGTH_LONG).show()
             }
             builder.create().show()
@@ -61,9 +79,7 @@ class AddReminderActivity : AppCompatActivity() {
             builder.setTitle("Set the Time")
             val view: View = LayoutInflater.from(this).inflate(R.layout.layout_timepicker, null)
             builder.setView(view)
-            var hour:String = ""
-            var min:String = ""
-            var period:String = ""
+
             val tp: TimePicker = view.findViewById(R.id.tp_lay_tp)
             tp.setOnTimeChangedListener{ _, hourOfDay, minute ->
                 var hourOfDay = hourOfDay
@@ -89,7 +105,8 @@ class AddReminderActivity : AppCompatActivity() {
              }
 
             builder.setPositiveButton("Okay") { dialogInterface, which ->
-                timeTv.setText("" + hour + "-" + min + " " + period)
+                eventTime = "" + hour + "-" + min + " " + period
+                timeTv.setText(eventTime)
                 Toast.makeText(applicationContext, "Date Set", Toast.LENGTH_LONG).show()
             }
 
@@ -98,7 +115,10 @@ class AddReminderActivity : AppCompatActivity() {
         }
 
         findViewById<MaterialButton>(R.id.mb_setReminder_ac_addRem).setOnClickListener {
-            Toast.makeText(applicationContext, "totoot", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(applicationContext, "totoot", Toast.LENGTH_SHORT).show()
+        val reminderController = ReminderController(applicationContext)
+            reminderController.addReminder(eventDate, eventTime, eventName, eventLocation)
+       
         }
     }
 }

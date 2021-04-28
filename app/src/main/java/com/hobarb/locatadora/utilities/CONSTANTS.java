@@ -12,10 +12,18 @@ public class CONSTANTS {
 
 
     public static class MAPKEYS {
-
+        //Alarm
         public static String DATETIME = "DATETIME";
         public static String LOCATION = "LOCATION";
         public static String LATLNG = "LAT,LNG";
+
+        //Reminders
+        public static String EVENT_DATE = "EVENT_DATE";
+        public static String EVENT_TIME = "EVENT_TIME";
+        public static String EVENT_NAME = "EVENT_NAME";
+        public static String EVENT_LOCATION = "EVENT_LOCATION";
+
+
     }
 
     public static class FIRESTORESTUFF {
@@ -23,12 +31,21 @@ public class CONSTANTS {
         public static String MAINTABLE = "USER_DATA";
         public static String USERID = "";
         public static String HISTORY = "HISTORY";
+        public static String REMINDERS = "REMINDERS";
     }
 
     public static class ALARM_STUFF{
         public static String DESTINATION = "";
         public static int NOTIFY_INTERVAL = 0;
         public static int CHECK_LOCATION_INTERVAL = 5000;
+
+
+    }
+
+    public static class BG_STUFF{
+        public static String CURRENT_USER_LATITUDE = "";
+        public static String CURRENT_USER_LONGITUDE = "";
+
 
 
     }

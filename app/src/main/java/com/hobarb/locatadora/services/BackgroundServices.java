@@ -5,8 +5,10 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.IBinder;
 import android.widget.Toast;
@@ -14,25 +16,57 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.hobarb.locatadora.R;
+import com.hobarb.locatadora.activities.TrackUserActivity;
 import com.hobarb.locatadora.activities.UserActivity;
 import com.hobarb.locatadora.utilities.CONSTANTS;
+import com.hobarb.locatadora.utilities.LocationUpdates;
 
 public class BackgroundServices extends Service {
 
     String NOTIFICATION_CHANNEL_ID = "com.example.simpleapp";
     String channelName = "My Background Service";
-
     Handler handler = new Handler();
-    Runnable runnable = new Runnable() {
-        //runinforeground
+    TrackUserActivity tua = new TrackUserActivity();
+    int count =0;
+    FusedLocationProviderClient mFusedLocationClient;
+    Context context;
+
+    public void startRepeating(){
+        handler.postDelayed(runnable, 1000);
+
+    }
+
+    public void stopRepeating() {
+        handler.removeCallbacks(runnable);
+
+    }
+
+
+
+    private  Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            Toast.makeText(BackgroundServices.this, "test", Toast.LENGTH_SHORT).show();
-            handler.postDelayed(this, CONSTANTS.ALARM_STUFF.CHECK_LOCATION_INTERVAL);
+
+            count++;
+            LocationUpdates.requestNewLocationData(mFusedLocationClient, context);
+            Toast.makeText(context, "Service"+ count + CONSTANTS.BG_STUFF.CURRENT_USER_LATITUDE + CONSTANTS.BG_STUFF.CURRENT_USER_LONGITUDE, Toast.LENGTH_SHORT).show();
+
+            if(count > 5)
+            {
+                stopRepeating();
+            }
+            else{
+                handler.postDelayed(runnable, 1000);
+
+            }
+
         }
     };
-    
+
+
     @Override
     public void onStart(Intent intent, int startId) {
         super.onStart(intent, startId);
@@ -63,6 +97,11 @@ public class BackgroundServices extends Service {
                 .setContentTitle("" + getApplicationContext().getApplicationInfo().packageName).setContentText("Alarm set for destination").setSmallIcon(R.mipmap.ic_launcher)
                 .setContentIntent(pendingIntent).build();
         startForeground(1, notification);
+
+
+         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
+            context  = this;
+
         handler.post(runnable);
         //stopSelf();
         return super.onStartCommand(intent, flags, startId);
