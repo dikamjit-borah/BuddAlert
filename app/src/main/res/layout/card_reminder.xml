@@ -23,26 +23,20 @@
 
                 <TextView
                     android:layout_margin="1dp"
-                    android:id="@+id/tv_contactNo_ca_contact"
-                    android:text="Event Date"
+                    android:id="@+id/tv_eventTime_ca_rem"
+                    android:text="Event Time"
                     android:gravity="end"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content">
 
                 </TextView>
-                <View
-                    android:layout_margin="1dp"
-                    android:background="@color/black"
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent">
 
-                </View>
                 <TextView
                     android:gravity="start"
                     android:layout_margin="1dp"
-                    android:id="@+id/tv_contactNo_ca_contact"
-                    android:text="Event time"
+                    android:id="@+id/tv_eventDate_ca_rem"
+                    android:text="Event Date"
 
                     android:layout_width="0dp"
                     android:layout_weight="1"
@@ -65,7 +59,7 @@
 
                 </ImageView>
                 <TextView
-                    android:id="@+id/tv_contactName_ca_contact"
+                    android:id="@+id/tv_eventName_ca_rem"
                     android:textSize="@dimen/titleSize"
                     android:text="Event Name"
                     android:layout_width="match_parent"
@@ -86,6 +80,7 @@
 
                 </ImageView>
                 <TextView
+                    android:id="@+id/tv_eventLocation_ca_rem"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Location">

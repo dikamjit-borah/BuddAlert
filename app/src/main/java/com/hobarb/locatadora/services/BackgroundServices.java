@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.IBinder;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -52,6 +53,7 @@ public class BackgroundServices extends Service {
 
             count++;
             LocationUpdates.requestNewLocationData(mFusedLocationClient, context);
+
             Toast.makeText(context, "Service"+ count + CONSTANTS.BG_STUFF.CURRENT_USER_LATITUDE + CONSTANTS.BG_STUFF.CURRENT_USER_LONGITUDE, Toast.LENGTH_SHORT).show();
 
             if(count > 5)

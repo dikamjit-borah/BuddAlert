@@ -3,5 +3,6 @@
     <array name="preloaded_fonts" translatable="false">
 
         <item>@font/comfortaa_light</item>
+        <item>@font/hammersmith_one</item>
     </array>
 </resources>

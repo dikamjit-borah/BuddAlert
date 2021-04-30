@@ -1,19 +1,23 @@
 package com.hobarb.locatadora.activities
 
-import android.app.DatePickerDialog
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
-import android.widget.DatePicker.OnDateChangedListener
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.common.api.Status
+import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.datepicker.MaterialDatePicker.Builder.datePicker
 import com.hobarb.locatadora.R
 import com.hobarb.locatadora.controllers.ReminderController
+import com.hobarb.locatadora.utilities.secrets
+import java.util.*
 
 
 class AddReminderActivity : AppCompatActivity() {
@@ -37,16 +41,67 @@ class AddReminderActivity : AppCompatActivity() {
 
     var eventName:String = ""
     var eventLocation = ""
+    var eventLatLng = ""
 
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_reminder)
+
+        val destination_tv = findViewById<TextView>(R.id.tv_destination_ac_addRem)
+        val latLong_tv = findViewById<TextView>(R.id.tv_latlng_ac_addRem)
+
+        if (!Places.isInitialized()) {
+            Places.initialize(applicationContext, secrets.API_KEY, Locale.US)
+        }
+
+
+        // Initialize the AutocompleteSupportFragment.
+
+
+        val autocompleteFragment =
+            supportFragmentManager.findFragmentById(R.id.autocomplete_fragment)
+                    as AutocompleteSupportFragment
+
+        // Specify the types of place data to return.
+        autocompleteFragment.setPlaceFields(
+            listOf(
+                Place.Field.ID,
+                Place.Field.NAME,
+                Place.Field.LAT_LNG
+            )
+        )
+
+        // Set up a PlaceSelectionListener to handle the response.
+        autocompleteFragment.setOnPlaceSelectedListener(object : PlaceSelectionListener {
+            override fun onPlaceSelected(place: Place) {
+                // TODO: Get info about the selected place.
+
+                destination_tv.text = "" + place.name
+                latLong_tv.text = "" + place.latLng
+                eventLocation = ""+place.name
+
+            }
+
+
+            override fun onError(status: Status) {
+                // TODO: Handle the error.
+                destination_tv.text = "" + status.statusMessage
+                latLong_tv.text = "" + status.resolution
+
+            }
+
+        })
+
+
         addDateLL = findViewById(R.id.ll_date_ac_addReminder)
         addTimeLL = findViewById(R.id.ll_time_ac_addReminder)
         dateTv = findViewById(R.id.tv_date_ac_addRem)
         timeTv = findViewById(R.id.tv_time_ac_addRem)
+
+
+
 
         addDateLL.setOnClickListener {
             val builder = AlertDialog.Builder(this)
@@ -68,7 +123,7 @@ class AddReminderActivity : AppCompatActivity() {
                 else
                     eventDate = selDate + "-" + selMonth + "-" + selYear
 
-                dateTv.setText(""+eventDate)
+                dateTv.setText("" + eventDate)
                 Toast.makeText(applicationContext, "Date Set", Toast.LENGTH_LONG).show()
             }
             builder.create().show()
@@ -114,11 +169,16 @@ class AddReminderActivity : AppCompatActivity() {
             builder.create().show()
         }
 
+        val et_eventName = findViewById<EditText>(R.id.eT_eventName_ac_addRem)
+
         findViewById<MaterialButton>(R.id.mb_setReminder_ac_addRem).setOnClickListener {
-            //Toast.makeText(applicationContext, "totoot", Toast.LENGTH_SHORT).show()
+            eventName = et_eventName.text.toString()
         val reminderController = ReminderController(applicationContext)
+            Toast.makeText(applicationContext, "" + eventName, Toast.LENGTH_SHORT).show()
             reminderController.addReminder(eventDate, eventTime, eventName, eventLocation)
        
         }
+
+
     }
 }
