@@ -2,7 +2,14 @@ package com.hobarb.locatadora.models;
 
 public class RemindersModel {
 
-    String eventDate, eventTime, location, eventName;
+    String eventDate, eventTime, eventLocation, eventName;
+
+    public RemindersModel(String eventDate, String eventTime, String eventLocation, String eventName) {
+    this.eventDate = eventDate;
+    this.eventTime = eventTime;
+    this.eventLocation = eventLocation;
+    this.eventName = eventName;
+    }
 
     public String getEventDate() {
         return eventDate;
@@ -20,12 +27,12 @@ public class RemindersModel {
         this.eventTime = eventTime;
     }
 
-    public String getLocation() {
-        return location;
+    public String getEventLocation() {
+        return eventLocation;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setEventLocation(String eventLocation) {
+        this.eventLocation = eventLocation;
     }
 
     public String getEventName() {

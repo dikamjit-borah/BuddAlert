@@ -92,7 +92,7 @@
                    android:layout_width="match_parent"
                    android:layout_height="match_parent">
                    <EditText
-                       android:id="@+id/eT_amount_at"
+                       android:id="@+id/eT_eventName_ac_addRem"
                        android:singleLine="true"
                        android:layout_width="match_parent"
                        android:layout_height="wrap_content"
@@ -126,12 +126,13 @@
                            android:orientation="vertical">
 
                            <TextView
+                               android:id="@+id/tv_latlng_ac_addRem"
                                android:layout_width="match_parent"
                                android:layout_height="wrap_content"
-                               android:text="Selected Destination"></TextView>
+                               android:text="No coordinates selected"></TextView>
 
                            <TextView
-                               android:id="@+id/tv_destination_ac_selDest"
+                               android:id="@+id/tv_destination_ac_addRem"
                                android:layout_width="match_parent"
                                android:layout_height="wrap_content"
                                android:text="No destination selected"
@@ -150,10 +151,10 @@
 
            <com.google.android.material.button.MaterialButton
                android:id="@+id/mb_setReminder_ac_addRem"
-               android:background="@drawable/ic_button"
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
                android:layout_gravity="bottom"
+               android:background="@drawable/ic_button"
                android:gravity="center"
                android:text="Set Reminder">
 

@@ -31,6 +31,7 @@ import java.util.*
 class AddAlarmActivity : AppCompatActivity() {
     lateinit var serviceIntent: Intent
     lateinit var error_tv:TextView
+    lateinit var destination: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_alarm)
@@ -39,7 +40,7 @@ class AddAlarmActivity : AppCompatActivity() {
 
         error_tv = findViewById(R.id.tv_error_ac_selDest)
 
-        val destination: TextView = findViewById(R.id.tv_destination_ac_selDest)
+         destination = findViewById(R.id.tv_destination_ac_selDest)
         val latLong: TextView = findViewById(R.id.tv_latLong_ac_selDest)
 
         if (!Places.isInitialized()) {
@@ -141,6 +142,7 @@ class AddAlarmActivity : AppCompatActivity() {
 
     private fun goToTrackUserActivity() {
         val intent = Intent(this@AddAlarmActivity, TrackUserActivity::class.java)
+        intent.putExtra("destination", destination.text )
         startActivity(intent)
     }
 

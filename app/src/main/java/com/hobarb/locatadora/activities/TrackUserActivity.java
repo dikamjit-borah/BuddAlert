@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -25,6 +26,7 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.hobarb.locatadora.R;
 import com.hobarb.locatadora.services.BackgroundServices;
 
 public class TrackUserActivity extends AppCompatActivity {
@@ -35,12 +37,16 @@ public class TrackUserActivity extends AppCompatActivity {
     Handler handler;
     Intent serviceIntent;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_track_user);
 
          serviceIntent = new Intent(this, BackgroundServices.class);
 
+         TextView destination_tv = findViewById(R.id.tv_enroute_ac_track);
+         destination_tv.setText("Enroute " +getIntent().getStringExtra("destination"));
 
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
