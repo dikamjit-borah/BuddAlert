@@ -121,9 +121,9 @@ class AddAlarmActivity : AppCompatActivity() {
         val user = db.collection(CONSTANTS.FIRESTORESTUFF.MAINTABLE)
 
         findViewById<MaterialButton>(R.id.btn_setAlarm_ac_login).setOnClickListener {
-            //uploadToHistory(user)
+            uploadToHistory(user)
             goToTrackUserActivity()
-            //getUserCurrentLocation()
+
 
         }
 
@@ -170,7 +170,7 @@ class AddAlarmActivity : AppCompatActivity() {
             locationData
         ).addOnSuccessListener { documentReference ->
             Toast.makeText(applicationContext, "Alarm set!", Toast.LENGTH_SHORT).show()
-            startBackgroundService()
+
         }
             .addOnFailureListener { e ->
                 Toast.makeText(applicationContext, "Error - " + e.message, Toast.LENGTH_SHORT).show()
@@ -178,16 +178,6 @@ class AddAlarmActivity : AppCompatActivity() {
     }
 
 
-    private fun startBackgroundService() {
-
-            //startAudioRecording();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                startForegroundService(serviceIntent)
-            } else {
-                startService(serviceIntent)
-            }
-
-    }
 
 
 

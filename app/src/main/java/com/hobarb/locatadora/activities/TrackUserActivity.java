@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -24,56 +25,30 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.hobarb.locatadora.services.BackgroundServices;
 
 public class TrackUserActivity extends AppCompatActivity {
     private static final int PERMISSION_ID = 1001;
     FusedLocationProviderClient mFusedLocationClient;
     String lat, lon;
     int count = 0;
+    Handler handler;
+    Intent serviceIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        
+         serviceIntent = new Intent(this, BackgroundServices.class);
+
+
+
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        getLastLocation();
-
-        Handler handler = new Handler();
-        Runnable runnable = null;
-        runnable = new Runnable() {
-            //runinforeground
-            @Override
-            public void run() {
-                count++;
-                Toast.makeText(TrackUserActivity.this, "yoyo" + count, Toast.LENGTH_SHORT).show();
-                handler.postDelayed(this, 4000);
-                if(count==5)
-                {
-                   // handler.removeCallbacks(runnable);
-                    Toast.makeText(TrackUserActivity.this, "DOnr", Toast.LENGTH_SHORT).show();
-                }
-
-                
-                
-            }
-
-        };
-
-
-
-
-        handler.post(runnable);
+       // getLastLocation();
+        startBackgroundService();
 
         
     }
-
-    public void stopHandler() {
-
-       
-    }
-
-
 
     @SuppressLint("MissingPermission")
     public void getLastLocation(){
@@ -164,5 +139,16 @@ public class TrackUserActivity extends AppCompatActivity {
                 getLastLocation();
             }
         }
+    }
+
+    private void startBackgroundService() {
+
+        //startAudioRecording();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(serviceIntent);
+        } else {
+            startService(serviceIntent);
+        }
+
     }
 }
