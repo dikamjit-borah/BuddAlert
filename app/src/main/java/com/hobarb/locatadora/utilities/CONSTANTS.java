@@ -47,6 +47,12 @@ public class CONSTANTS {
         public static String CURRENT_USER_LATITUDE = "";
         public static String CURRENT_USER_LONGITUDE = "";
 
+        public static String DESTINATION_LAT_LNG = "";
+
+        public static String INTENT_EXTRA_LATITUDE= "LATITUDE";
+        public static String INTENT_EXTRA_LONGITUDE = "LONGITUDE";
+        public static String INTENT_ACTION = "TRACK_USER_ACTIVITY";
+
 
 
     }

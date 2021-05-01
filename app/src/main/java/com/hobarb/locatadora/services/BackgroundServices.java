@@ -1,5 +1,6 @@
 package com.hobarb.locatadora.services;
 
+import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -25,19 +27,29 @@ import com.hobarb.locatadora.activities.UserActivity;
 import com.hobarb.locatadora.utilities.CONSTANTS;
 import com.hobarb.locatadora.utilities.LocationUpdates;
 
-public class BackgroundServices extends Service {
+public class BackgroundServices extends IntentService {
+
+
+    public static final String ACTION_LOCATION_BROADCAST = BackgroundServices.class.getName() + "LocationBroadcast";
+    public static final String EXTRA_LATITUDE = "extra_latitude";
+    public static final String EXTRA_LONGITUDE = "extra_longitude";
+
 
     String NOTIFICATION_CHANNEL_ID = "com.example.simpleapp";
     String channelName = "My Background Service";
     Handler handler = new Handler();
-    TrackUserActivity tua = new TrackUserActivity();
+
     int count =0;
     FusedLocationProviderClient mFusedLocationClient;
     Context context;
 
-    public void startRepeating(){
-        handler.postDelayed(runnable, 1000);
+    public BackgroundServices() {
+        super(null);
+    }
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
     }
 
     public void stopRepeating() {
@@ -45,33 +57,42 @@ public class BackgroundServices extends Service {
 
     }
 
-
-
     private  Runnable runnable = new Runnable() {
         @Override
         public void run() {
 
             count++;
             LocationUpdates.requestNewLocationData(mFusedLocationClient, context);
-
             Toast.makeText(context, "Service"+ count + CONSTANTS.BG_STUFF.CURRENT_USER_LATITUDE + CONSTANTS.BG_STUFF.CURRENT_USER_LONGITUDE, Toast.LENGTH_SHORT).show();
 
-            if(count > 5)
+            updateTrackUserActivity();
+
+            if(count > 9)
             {
                 stopRepeating();
             }
             else{
-                handler.postDelayed(runnable, 1000);
+                handler.postDelayed(runnable, 5000);
 
             }
 
         }
     };
 
+    private void updateTrackUserActivity() {
+        Intent intent1 = new Intent();
+        intent1.setAction(CONSTANTS.BG_STUFF.INTENT_ACTION);
+        intent1.putExtra(CONSTANTS.BG_STUFF.INTENT_EXTRA_LATITUDE, ""+CONSTANTS.BG_STUFF.CURRENT_USER_LATITUDE);
+        intent1.putExtra(CONSTANTS.BG_STUFF.INTENT_EXTRA_LONGITUDE, ""+count+"    ioi");
+        sendBroadcast(intent1);
+    }
+
 
     @Override
     public void onStart(Intent intent, int startId) {
+
         super.onStart(intent, startId);
+
     }
 
 
@@ -79,6 +100,11 @@ public class BackgroundServices extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         return null;
+    }
+
+    @Override
+    protected void onHandleIntent(@Nullable Intent intent) {
+
     }
 
 
@@ -92,6 +118,7 @@ public class BackgroundServices extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
+        context = this;
         createNotification();
         Intent intent1 = new Intent(this, UserActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent1, 0);
@@ -102,7 +129,7 @@ public class BackgroundServices extends Service {
 
 
          mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
-            context  = this;
+
 
         handler.post(runnable);
         //stopSelf();
@@ -111,10 +138,13 @@ public class BackgroundServices extends Service {
 
     private void createNotification() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Toast.makeText(context, "totototo n" + "otig", Toast.LENGTH_SHORT).show();
             NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, channelName, NotificationManager.IMPORTANCE_DEFAULT);
             NotificationManager manager = getSystemService(NotificationManager.class);
             manager.createNotificationChannel(notificationChannel);
         }
 
     }
+
+
 }

@@ -71,6 +71,7 @@ class AddAlarmActivity : AppCompatActivity() {
 
                 destination.text = "" + place.name
                 latLong.text = "" + place.latLng
+                CONSTANTS.BG_STUFF.DESTINATION_LAT_LNG = "" + place.latLng
 
             }
 
