@@ -33,6 +33,7 @@
                 </TextView>
 
                 <TextView
+                    android:textStyle="bold"
                     android:gravity="start"
                     android:layout_margin="1dp"
                     android:id="@+id/tv_eventDate_ca_rem"

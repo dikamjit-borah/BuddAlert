@@ -3,11 +3,14 @@ package com.hobarb.locatadora.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -28,15 +31,47 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.hobarb.locatadora.R;
 import com.hobarb.locatadora.services.BackgroundServices;
+import com.hobarb.locatadora.utilities.CONSTANTS;
 
 public class TrackUserActivity extends AppCompatActivity {
     private static final int PERMISSION_ID = 1001;
-    FusedLocationProviderClient mFusedLocationClient;
+
     String lat, lon;
     int count = 0;
     Handler handler;
     Intent serviceIntent;
+    TextView current_tv;
 
+    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String s1 = intent.getStringExtra(CONSTANTS.BG_STUFF.INTENT_EXTRA_LATITUDE);
+            String s2 = intent.getStringExtra(CONSTANTS.BG_STUFF.INTENT_EXTRA_LONGITUDE);
+            current_tv.setText("Currently at (" + s1 + ", " + s2 + ")");
+        }
+    };
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(CONSTANTS.BG_STUFF.INTENT_ACTION);
+        registerReceiver(broadcastReceiver, intentFilter);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(CONSTANTS.BG_STUFF.INTENT_ACTION);
+        registerReceiver(broadcastReceiver, intentFilter);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(broadcastReceiver);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,73 +81,15 @@ public class TrackUserActivity extends AppCompatActivity {
          serviceIntent = new Intent(this, BackgroundServices.class);
 
          TextView destination_tv = findViewById(R.id.tv_enroute_ac_track);
-         destination_tv.setText("Enroute " +getIntent().getStringExtra("destination"));
-
-
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-       // getLastLocation();
-        startBackgroundService();
+         current_tv = findViewById(R.id.tv_currentLatLng_ac_track);
+         destination_tv.setText("Enroute " +getIntent().getStringExtra("destination") + " " + CONSTANTS.BG_STUFF.DESTINATION_LAT_LNG);
+            startBackgroundService();
 
         
     }
 
-    @SuppressLint("MissingPermission")
-    public void getLastLocation(){
-        if (checkPermissions()) {
-            if (isLocationEnabled()) {
-                mFusedLocationClient.getLastLocation().addOnCompleteListener(
-                        new OnCompleteListener<Location>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Location> task) {
-                                Location location = task.getResult();
-                                if (location == null) {
-                                    requestNewLocationData();
-                                } else {
-                                    lat = String.valueOf(location.getLatitude());
-                                    lon = String.valueOf(location.getLongitude());
-
-                                    Toast.makeText(TrackUserActivity.this, ""+lat+", "+lon, Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        }
-                );
-            } else {
-                Toast.makeText(this, "Turn on location", Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                startActivity(intent);
-            }
-        } else {
-            requestPermissions();
-        }
-    }
 
 
-    @SuppressLint("MissingPermission")
-    private void requestNewLocationData(){
-
-        LocationRequest mLocationRequest = new LocationRequest();
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest.setInterval(0);
-        mLocationRequest.setFastestInterval(0);
-        mLocationRequest.setNumUpdates(1);
-
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        mFusedLocationClient.requestLocationUpdates(
-                mLocationRequest, mLocationCallback,
-                Looper.myLooper()
-        );
-
-    }
-
-    private LocationCallback mLocationCallback = new LocationCallback() {
-        @Override
-        public void onLocationResult(LocationResult locationResult) {
-            Location mLastLocation = locationResult.getLastLocation();
-            lat = String.valueOf(mLastLocation.getLatitude());
-            lon = String.valueOf(mLastLocation.getLongitude());
-
-        }
-    };
 
     private boolean checkPermissions() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
@@ -142,14 +119,13 @@ public class TrackUserActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == PERMISSION_ID) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                getLastLocation();
+                startBackgroundService();
             }
         }
     }
 
     private void startBackgroundService() {
 
-        //startAudioRecording();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(serviceIntent);
         } else {
