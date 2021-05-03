@@ -90,7 +90,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="Location Alarm"
+                            android:text="@string/location_alarm"
                             android:textColor="#4A00E0">
 
                         </TextView>
@@ -124,7 +124,7 @@
                             android:gravity="center"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="History">
+                            android:text="@string/history">
 
                         </TextView>
                     </LinearLayout>
@@ -165,7 +165,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="Contacts">
+                            android:text="@string/contacts">
 
                         </TextView>
                     </LinearLayout>
@@ -198,7 +198,7 @@
                             android:gravity="center"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Set Reminder">
+                            android:text="@string/reminders">
 
                         </TextView>
                     </LinearLayout>

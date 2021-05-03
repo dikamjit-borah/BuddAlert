@@ -22,6 +22,7 @@ class RemindersActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reminders)
+        supportActionBar!!.setTitle(R.string.reminders);
 
         reminders_rv = findViewById(R.id.rv_reminders_ac_rem)
         remindersArraylist = arrayListOf()

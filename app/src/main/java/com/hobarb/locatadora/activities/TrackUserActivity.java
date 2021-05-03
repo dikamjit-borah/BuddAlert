@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +33,7 @@ import com.google.android.gms.tasks.Task;
 import com.hobarb.locatadora.R;
 import com.hobarb.locatadora.services.BackgroundServices;
 import com.hobarb.locatadora.utilities.CONSTANTS;
+import com.hobarb.locatadora.utilities.LocationUpdates;
 
 public class TrackUserActivity extends AppCompatActivity {
     private static final int PERMISSION_ID = 1001;
@@ -41,13 +43,27 @@ public class TrackUserActivity extends AppCompatActivity {
     Handler handler;
     Intent serviceIntent;
     TextView current_tv;
+    double dest_lat, dest_lng;
+    boolean reached_destination = false;
 
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String s1 = intent.getStringExtra(CONSTANTS.BG_STUFF.INTENT_EXTRA_LATITUDE);
-            String s2 = intent.getStringExtra(CONSTANTS.BG_STUFF.INTENT_EXTRA_LONGITUDE);
-            current_tv.setText("Currently at (" + s1 + ", " + s2 + ")");
+            double curr_lat = intent.getDoubleExtra(CONSTANTS.BG_STUFF.INTENT_EXTRA_LATITUDE, 0.0);
+            double curr_lng = intent.getDoubleExtra(CONSTANTS.BG_STUFF.INTENT_EXTRA_LONGITUDE, 0.0);
+            double distance_remaining =  LocationUpdates.calculateDistance(curr_lat, curr_lng, dest_lat, dest_lng);
+            CONSTANTS.BG_STUFF.CURRENT_DISTANCE_REMAINING = distance_remaining;
+            current_tv.setText("Distance remaining ~ " + distance_remaining + "km");
+
+            reached_destination = intent.getBooleanExtra(CONSTANTS.BG_STUFF.INTENT_EXTRA_REACHED, false);
+            if(reached_destination)
+            {
+                findViewById(R.id.ll_destReached_ac_track).setVisibility(View.VISIBLE);
+            }
+
+
+        //    CONSTANTS.BG_STUFF.DESTINATION_LAT_LNG;
+
         }
     };
 
@@ -81,11 +97,27 @@ public class TrackUserActivity extends AppCompatActivity {
          serviceIntent = new Intent(this, BackgroundServices.class);
 
          TextView destination_tv = findViewById(R.id.tv_enroute_ac_track);
-         current_tv = findViewById(R.id.tv_currentLatLng_ac_track);
-         destination_tv.setText("Enroute " +getIntent().getStringExtra("destination") + " " + CONSTANTS.BG_STUFF.DESTINATION_LAT_LNG);
+         String s = CONSTANTS.BG_STUFF.DESTINATION_LAT_LNG;
+         String s0 = s.replace("lat/lng: ", "");
+        String s1 = s0.replace("(", "");
+        String s2 = s1.replace(")", "");
+
+        String[] words=s2.split(",");
+         dest_lat = Double.parseDouble(words[0]);
+         dest_lng = Double.parseDouble(words[1]);
+         CONSTANTS.BG_STUFF.DESTINATION = getIntent().getStringExtra("destination");
+        destination_tv.setText("En route " + CONSTANTS.BG_STUFF.DESTINATION);
+
+        current_tv = findViewById(R.id.tv_currentLatLng_ac_track);
             startBackgroundService();
 
-        
+            findViewById(R.id.btn_stopAlarm_ac_track).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(TrackUserActivity.this, "Alarm stopped", Toast.LENGTH_SHORT).show();
+                }
+            });
+
     }
 
 

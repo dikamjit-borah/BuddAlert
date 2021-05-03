@@ -3,4 +3,8 @@
     <string name="sign_phone">Enter phone number</string>
     <string name="title_activity_maps">Map</string>
     <string name="sign_otp">Enter OTP</string>
+    <string name="location_alarm">Location Alarm</string>
+    <string name="history">History</string>
+    <string name="contacts">Contacts</string>
+    <string name="reminders">Reminders</string>
 </resources>

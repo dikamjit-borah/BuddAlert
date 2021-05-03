@@ -48,6 +48,7 @@ class AddReminderActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_reminder)
+        supportActionBar!!.setTitle(R.string.reminders);
 
         val destination_tv = findViewById<TextView>(R.id.tv_destination_ac_addRem)
         val latLong_tv = findViewById<TextView>(R.id.tv_latlng_ac_addRem)

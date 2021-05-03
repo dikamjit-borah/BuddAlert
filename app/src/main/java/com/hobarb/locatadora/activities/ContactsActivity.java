@@ -35,6 +35,8 @@ public class ContactsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
+        getSupportActionBar().setTitle(R.string.contacts);
+
         contacts_rv = findViewById(R.id.rv_contacts_ac_contacts);
 
         findViewById(R.id.btn_addContacts_ac_addContacts).setOnClickListener(new View.OnClickListener() {

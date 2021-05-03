@@ -6,12 +6,17 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
 import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.IBinder;
+import android.telephony.PhoneNumberUtils;
+import android.telephony.SmsManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +31,8 @@ import com.hobarb.locatadora.activities.TrackUserActivity;
 import com.hobarb.locatadora.activities.UserActivity;
 import com.hobarb.locatadora.utilities.CONSTANTS;
 import com.hobarb.locatadora.utilities.LocationUpdates;
+
+import java.util.ArrayList;
 
 public class BackgroundServices extends IntentService {
 
@@ -42,6 +49,7 @@ public class BackgroundServices extends IntentService {
     int count =0;
     FusedLocationProviderClient mFusedLocationClient;
     Context context;
+    boolean destination_reached = false;
 
     public BackgroundServices() {
         super(null);
@@ -63,27 +71,73 @@ public class BackgroundServices extends IntentService {
 
             count++;
             LocationUpdates.requestNewLocationData(mFusedLocationClient, context);
-            Toast.makeText(context, "Service"+ count + CONSTANTS.BG_STUFF.CURRENT_USER_LATITUDE + CONSTANTS.BG_STUFF.CURRENT_USER_LONGITUDE, Toast.LENGTH_SHORT).show();
+
+            Toast.makeText(context, "Service "+ count, Toast.LENGTH_SHORT).show();
 
             updateTrackUserActivity();
 
-            if(count > 9)
+            Toast.makeText(context, "" + CONSTANTS.BG_STUFF.CURRENT_DISTANCE_REMAINING, Toast.LENGTH_SHORT).show();
+            if(CONSTANTS.BG_STUFF.CURRENT_DISTANCE_REMAINING<2)
+            {
+                destination_reached = true;
+                updateTrackUserActivity();
+                Toast.makeText(context, "Destination reached", Toast.LENGTH_SHORT).show();
+            }
+
+            if(destination_reached || count >6)
             {
                 stopRepeating();
+                Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE));
+                ringtone.play();
             }
             else{
-                handler.postDelayed(runnable, 5000);
+                if(CONSTANTS.BG_STUFF.CURRENT_USER_LATITUDE == 0.0 || CONSTANTS.BG_STUFF.CURRENT_USER_LONGITUDE == 0.0)
+                    handler.postDelayed(runnable, 1000);
+                else
+                {
+                    //sendSMS();
+                    handler.postDelayed(runnable, 5000);
+                }
 
             }
 
         }
     };
 
+    private void sendSMS() {
+          final String SMS_SENT_INTENT_FILTER = "com.yourapp.sms_send";
+          final String SMS_DELIVERED_INTENT_FILTER = "com.yourapp.sms_delivered";
+
+          String curr_loc = "https://maps.google.com/?q="+ CONSTANTS.BG_STUFF.CURRENT_USER_LATITUDE +","+CONSTANTS.BG_STUFF.CURRENT_USER_LONGITUDE+"";
+
+        String message = "Hello my friend, I am en route " + CONSTANTS.BG_STUFF.DESTINATION + ". Currently I am here -> " + curr_loc;
+
+        ArrayList<String> phnNo = new ArrayList<>(); //preferable use complete international number
+        phnNo.add("+919706660771");
+        phnNo.add("+919854052673");
+        PendingIntent sentPI = PendingIntent.getBroadcast(this, 0, new Intent(
+                SMS_SENT_INTENT_FILTER), 0);
+        PendingIntent deliveredPI = PendingIntent.getBroadcast(this, 0, new Intent(
+                SMS_DELIVERED_INTENT_FILTER), 0);
+
+        SmsManager sms = SmsManager.getDefault();
+        for(int i = 0; i<2; i++)
+        {
+            sms.sendTextMessage(phnNo.get(i), null, message, sentPI, deliveredPI);
+        }
+
+
+
+    }
+
     private void updateTrackUserActivity() {
         Intent intent1 = new Intent();
         intent1.setAction(CONSTANTS.BG_STUFF.INTENT_ACTION);
-        intent1.putExtra(CONSTANTS.BG_STUFF.INTENT_EXTRA_LATITUDE, ""+CONSTANTS.BG_STUFF.CURRENT_USER_LATITUDE);
-        intent1.putExtra(CONSTANTS.BG_STUFF.INTENT_EXTRA_LONGITUDE, ""+count+"    ioi");
+
+        intent1.putExtra(CONSTANTS.BG_STUFF.INTENT_EXTRA_LATITUDE, CONSTANTS.BG_STUFF.CURRENT_USER_LATITUDE);
+        intent1.putExtra(CONSTANTS.BG_STUFF.INTENT_EXTRA_LONGITUDE, CONSTANTS.BG_STUFF.CURRENT_USER_LONGITUDE);
+        intent1.putExtra(CONSTANTS.BG_STUFF.INTENT_EXTRA_REACHED, destination_reached);
+
         sendBroadcast(intent1);
     }
 

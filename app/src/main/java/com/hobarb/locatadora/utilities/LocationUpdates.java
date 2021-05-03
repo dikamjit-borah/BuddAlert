@@ -34,8 +34,24 @@ public class LocationUpdates {
         @Override
         public void onLocationResult(LocationResult locationResult) {
             Location mLastLocation = locationResult.getLastLocation();
-            CONSTANTS.BG_STUFF.CURRENT_USER_LATITUDE = String.valueOf(mLastLocation.getLatitude());
-            CONSTANTS.BG_STUFF.CURRENT_USER_LONGITUDE = String.valueOf(mLastLocation.getLongitude());
+            CONSTANTS.BG_STUFF.CURRENT_USER_LATITUDE = (mLastLocation.getLatitude());
+            CONSTANTS.BG_STUFF.CURRENT_USER_LONGITUDE = (mLastLocation.getLongitude());
             }
     };
+
+    public static double calculateDistance(double userLat, double userLng, double venueLat, double venueLng){
+        double AVERAGE_RADIUS_OF_EARTH_KM = 6371;
+        double remaining_distance = 0.0;
+        double latDistance = Math.toRadians(userLat - venueLat);
+        double lngDistance = Math.toRadians(userLng - venueLng);
+
+        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+                + Math.cos(Math.toRadians(userLat)) * Math.cos(Math.toRadians(venueLat))
+                * Math.sin(lngDistance / 2) * Math.sin(lngDistance / 2);
+
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        remaining_distance =  (Math.round(AVERAGE_RADIUS_OF_EARTH_KM * c));
+        return remaining_distance;
+    }
 }
