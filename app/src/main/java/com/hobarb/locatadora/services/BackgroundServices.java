@@ -131,6 +131,7 @@ public class BackgroundServices extends IntentService {
     }
 
     private void updateTrackUserActivity() {
+
         Intent intent1 = new Intent();
         intent1.setAction(CONSTANTS.BG_STUFF.INTENT_ACTION);
 
@@ -192,7 +193,7 @@ public class BackgroundServices extends IntentService {
 
     private void createNotification() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Toast.makeText(context, "totototo n" + "otig", Toast.LENGTH_SHORT).show();
+
             NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, channelName, NotificationManager.IMPORTANCE_DEFAULT);
             NotificationManager manager = getSystemService(NotificationManager.class);
             manager.createNotificationChannel(notificationChannel);

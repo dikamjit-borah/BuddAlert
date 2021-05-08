@@ -42,6 +42,15 @@
                     android:id="@+id/tv_currentLatLng_ac_track"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:text="Current ~"
+                    android:textSize="@dimen/titleSize"
+                    android:textStyle="bold">
+
+                </TextView>
+                <TextView
+                    android:id="@+id/tv_distance_ac_track"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:text="Distance remaining ~"
                     android:textSize="@dimen/titleSize"
                     android:textStyle="bold">

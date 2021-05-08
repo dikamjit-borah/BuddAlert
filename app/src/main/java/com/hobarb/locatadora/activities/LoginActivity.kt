@@ -107,6 +107,7 @@ class LoginActivity : AppCompatActivity() {
         goToUserActivity()
 
 
+
     }
 
 
@@ -121,6 +122,7 @@ class LoginActivity : AppCompatActivity() {
     private fun goToUserActivity() {
         val intent = Intent(this@LoginActivity, UserActivity::class.java)
         startActivity(intent)
+        finish()
     }
 
 }
