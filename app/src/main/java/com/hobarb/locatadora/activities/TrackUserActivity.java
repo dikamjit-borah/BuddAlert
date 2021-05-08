@@ -43,6 +43,7 @@ public class TrackUserActivity extends AppCompatActivity {
     Handler handler;
     Intent serviceIntent;
     TextView current_tv;
+    TextView distance_tv;
     double dest_lat, dest_lng;
     boolean reached_destination = false;
 
@@ -100,6 +101,7 @@ public class TrackUserActivity extends AppCompatActivity {
          serviceIntent = new Intent(this, BackgroundServices.class);
 
          TextView destination_tv = findViewById(R.id.tv_enroute_ac_track);
+         distance_tv = findViewById(R.id.tv_distance_ac_track);
          String s = CONSTANTS.BG_STUFF.DESTINATION_LAT_LNG;
          String s0 = s.replace("lat/lng: ", "");
         String s1 = s0.replace("(", "");
