@@ -1,7 +1,8 @@
 package com.hobarb.locatadora.activities
 
+import android.R.attr.phoneNumber
 import android.content.Intent
-import android.os.Build
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.LinearLayout
@@ -25,6 +26,7 @@ import com.hobarb.locatadora.utilities.CONSTANTS
 import com.hobarb.locatadora.utilities.GlobalFunctions
 import com.hobarb.locatadora.utilities.SharedPrefs
 import com.hobarb.locatadora.utilities.secrets
+import java.net.URLEncoder
 import java.util.*
 
 
@@ -35,6 +37,7 @@ class AddAlarmActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_alarm)
+        supportActionBar!!.setTitle(R.string.location_alarm);
         serviceIntent = Intent(applicationContext, BackgroundServices::class.java)
 
 
@@ -127,6 +130,35 @@ class AddAlarmActivity : AppCompatActivity() {
             goToTrackUserActivity()
 
 
+
+/*
+
+            Toast.makeText(applicationContext, "ÿoyoyoyo", Toast.LENGTH_SHORT).show()
+            val curr_loc =
+                "https://maps.google.com/?q=<" + CONSTANTS.BG_STUFF.CURRENT_USER_LATITUDE + ">,<" + CONSTANTS.BG_STUFF.CURRENT_USER_LONGITUDE + ">"
+
+            val message =
+                "Hello my friends, I am en route " + CONSTANTS.BG_STUFF.DESTINATION + ". Currently I am here -> " + curr_loc
+
+            val phnNo = "+918471925921"
+
+          */
+/*  val intent = Intent(Intent.ACTION_SEND)
+            intent.data =
+                Uri.parse("http://api.whatsapp.com/send?phone=" + phnNo.toString() + "&text=" + message)
+            startActivity(intent)*//*
+
+
+            val url = "https://api.whatsapp.com/send?phone=" + phnNo + "&text=" + URLEncoder.encode(message, "UTF-8")
+
+            val it = intent.setPackage("com.whatsapp")
+            intent.data = Uri.parse(url)
+
+            startActivity(intent)
+*/
+
+
+
         }
 
 
@@ -143,7 +175,7 @@ class AddAlarmActivity : AppCompatActivity() {
 
     private fun goToTrackUserActivity() {
         val intent = Intent(this@AddAlarmActivity, TrackUserActivity::class.java)
-        intent.putExtra("destination", destination.text )
+        intent.putExtra("destination", destination.text)
         startActivity(intent)
     }
 

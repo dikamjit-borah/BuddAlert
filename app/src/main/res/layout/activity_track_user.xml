@@ -12,18 +12,21 @@
         android:layout_margin="@dimen/marginParent"
         android:elevation="@dimen/cardElevation"
         app:cardCornerRadius="@dimen/cardRadius">
+
         <LinearLayout
-            android:layout_margin="@dimen/marginParent"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_margin="@dimen/marginParent"
             android:orientation="vertical">
+
             <ImageView
-                android:layout_gravity="center"
                 android:layout_width="180dp"
                 android:layout_height="180dp"
+                android:layout_gravity="center"
                 android:src="@drawable/iconfinder_enroute">
 
             </ImageView>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -33,15 +36,59 @@
                     android:id="@+id/tv_enroute_ac_track"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Enroute"></TextView>
+                    android:text="En route"></TextView>
 
                 <TextView
                     android:id="@+id/tv_currentLatLng_ac_track"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Currently at"
+                    android:text="Distance remaining ~"
                     android:textSize="@dimen/titleSize"
-                    android:textStyle="bold"></TextView>
+                    android:textStyle="bold">
+
+                </TextView>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/marginParent"
+                    app:cardCornerRadius="@dimen/cardRadius"
+                    app:cardElevation="@dimen/cardElevation">
+
+                    <LinearLayout
+                        android:visibility="gone"
+                        android:id="@+id/ll_destReached_ac_track"
+                        android:layout_width="match_parent"
+
+
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+
+                        android:background="#f44336"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Destination Reached!"
+                            android:textAlignment="center"
+                            android:textColor="@color/white"
+                            android:textSize="42sp">
+
+                        </TextView>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/btn_stopAlarm_ac_track"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="#ba000d"
+                            android:text="Stop Alarm"
+                            android:textColor="@color/white">
+
+                        </androidx.appcompat.widget.AppCompatButton>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
 
             </LinearLayout>
 

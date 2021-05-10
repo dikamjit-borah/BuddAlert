@@ -44,14 +44,20 @@ public class CONSTANTS {
     }
 
     public static class BG_STUFF{
-        public static String CURRENT_USER_LATITUDE = "";
-        public static String CURRENT_USER_LONGITUDE = "";
+
+        public static double CURRENT_USER_LATITUDE = 0.0;
+        public static double CURRENT_USER_LONGITUDE = 0.0;
+        public static double DESTINATION_LATITUDE = 0.0;
+        public static double DESTINATION_LONGITUDE = 0.0;
+        public static String DESTINATION = "";
+        public static double CURRENT_DISTANCE_REMAINING = 1000;
 
         public static String DESTINATION_LAT_LNG = "";
 
         public static String INTENT_EXTRA_LATITUDE= "LATITUDE";
         public static String INTENT_EXTRA_LONGITUDE = "LONGITUDE";
         public static String INTENT_ACTION = "TRACK_USER_ACTIVITY";
+        public static  String INTENT_EXTRA_REACHED = "IS_DESTINATION_REACHED";
 
 
 

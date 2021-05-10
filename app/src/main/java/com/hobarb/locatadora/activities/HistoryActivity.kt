@@ -25,6 +25,8 @@ class HistoryActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_history)
+        supportActionBar!!.setTitle(R.string.history);
+
         val db = FirebaseFirestore.getInstance()
 
         historyModels = arrayListOf()
