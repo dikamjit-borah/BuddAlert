@@ -15,7 +15,7 @@ import com.google.android.libraries.places.widget.AutocompleteSupportFragment
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
 import com.google.android.material.button.MaterialButton
 import com.hobarb.locatadora.R
-import com.hobarb.locatadora.controllers.ReminderController
+import com.hobarb.locatadora.controllers.FirebaseController
 import com.hobarb.locatadora.utilities.secrets
 import java.util.*
 
@@ -114,7 +114,7 @@ class AddReminderActivity : AppCompatActivity() {
             dp.setOnDateChangedListener { view, year, monthOfYear, dayOfMonth ->
                 selDate = dayOfMonth.toString();
                 selMonth = (monthOfYear + 1).toString();
-                selYear = (year + 1).toString();
+                selYear = (year).toString();
 
                 //Toast.makeText(applicationContext,"Date Set" + dayOfMonth+"-"+monthOfYear,Toast.LENGTH_LONG).show()
             }
@@ -174,9 +174,12 @@ class AddReminderActivity : AppCompatActivity() {
 
         findViewById<MaterialButton>(R.id.mb_setReminder_ac_addRem).setOnClickListener {
             eventName = et_eventName.text.toString()
-        val reminderController = ReminderController(applicationContext)
+        val firebaseController =
+            FirebaseController(
+                this@AddReminderActivity
+            )
             Toast.makeText(applicationContext, "" + eventName, Toast.LENGTH_SHORT).show()
-            reminderController.addReminder(eventDate, eventTime, eventName, eventLocation)
+            firebaseController.addReminder(eventDate, eventTime, eventName, eventLocation)
        
         }
 

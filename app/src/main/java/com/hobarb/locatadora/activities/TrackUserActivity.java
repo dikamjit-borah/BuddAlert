@@ -100,6 +100,8 @@ public class TrackUserActivity extends AppCompatActivity {
             requestPermissions();
          serviceIntent = new Intent(this, BackgroundServices.class);
 
+
+
          TextView destination_tv = findViewById(R.id.tv_enroute_ac_track);
          distance_tv = findViewById(R.id.tv_distance_ac_track);
          String s = CONSTANTS.BG_STUFF.DESTINATION_LAT_LNG;

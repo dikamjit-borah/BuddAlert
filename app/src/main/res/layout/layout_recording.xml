@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:layout_margin="@dimen/marginParent">
+
+
+        <androidx.cardview.widget.CardView
+
+            app:cardElevation="0dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ProgressBar
+                android:indeterminateTint="@color/primary1"
+                android:outlineSpotShadowColor="@color/black"
+                android:outlineAmbientShadowColor="@color/primary1"
+                android:layout_gravity="center"
+                android:layout_width="140dp"
+                android:layout_height="140dp">
+            </ProgressBar>
+            <ImageView
+                android:layout_gravity="center"
+                android:layout_width="54dp"
+                android:layout_height="54dp"
+                android:src="@drawable/iconfinder_recorder">
+
+            </ImageView>
+        </androidx.cardview.widget.CardView>
+    <TextView
+        android:padding="@dimen/globalPadding"
+        android:textColor="@color/primary2"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Requesting help">
+
+    </TextView>
+
+
+
+</LinearLayout>

@@ -1,6 +1,7 @@
 package com.hobarb.locatadora.controllers;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -8,26 +9,32 @@ import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.hobarb.locatadora.activities.UserActivity;
+import com.hobarb.locatadora.models.ContactsModel;
 import com.hobarb.locatadora.models.RemindersModel;
 import com.hobarb.locatadora.utilities.CONSTANTS;
 import com.hobarb.locatadora.utilities.SharedPrefs;
+import com.hobarb.locatadora.utilities.views.Loader;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ReminderController {
+public class FirebaseController {
     CollectionReference user;
     FirebaseFirestore db;
     Context context;
     String identifier;
-    public ReminderController(Context context){
+    Loader loader;
+    public FirebaseController(Context context){
+        loader = new Loader(context);
      db    = FirebaseFirestore.getInstance();
      user = db.collection(CONSTANTS.FIRESTORESTUFF.MAINTABLE);
      this.context = context;
@@ -35,10 +42,35 @@ public class ReminderController {
      identifier = sharedPrefs.readPrefs(CONSTANTS.SHARED_PREF_KEYS.IDENTIFIER);
     }
 
+    public void addContactsToDb(ArrayList<ContactsModel> contactsModels)
+    {
+        loader.showAlertDialog();
+        Map<String, Object> contacts = new HashMap<>();
+        for (ContactsModel contact:contactsModels) {
+            contacts.put(CONSTANTS.MAPKEYS.CONTACT_NAME,contact.getName());
+            contacts.put(CONSTANTS.MAPKEYS.CONTACT_NUMBER, contact.getNumber());
+        }
+
+        user.document(identifier).collection(CONSTANTS.FIRESTORESTUFF.CONTACTS).add(contacts).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(DocumentReference documentReference) {
+                Toast.makeText(context, "Contacts saved!", Toast.LENGTH_SHORT).show();
+                loader.dismissAlertDialog();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(context, " "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                loader.dismissAlertDialog();
+            }
+        });
+    }
+
     public void addReminder(String eventDate, String eventTime, String eventName, String eventLocation)
     {
 
 
+        loader.showAlertDialog();
 
         Map<String, Object> reminders = new HashMap<>();
         reminders.put(CONSTANTS.MAPKEYS.EVENT_DATE, eventDate);
@@ -53,8 +85,9 @@ public class ReminderController {
                 {
 
                     Toast.makeText(context, "Reminder created", Toast.LENGTH_SHORT).show();
-                    // startActivity(new Intent(getApplicationContext(), Dashboard.class));
-                    //finish();
+                    loader.dismissAlertDialog();
+                    context.startActivity(new Intent(context, UserActivity.class));
+
                 }
                 else
                 {

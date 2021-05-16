@@ -1,8 +1,6 @@
 package com.hobarb.locatadora.activities
 
-import android.R.attr.phoneNumber
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.LinearLayout
@@ -11,6 +9,8 @@ import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.common.api.Status
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
@@ -21,12 +21,14 @@ import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.hobarb.locatadora.R
+import com.hobarb.locatadora.adapters.ContactsAdapter
+import com.hobarb.locatadora.models.ContactsModel
 import com.hobarb.locatadora.services.BackgroundServices
 import com.hobarb.locatadora.utilities.CONSTANTS
 import com.hobarb.locatadora.utilities.GlobalFunctions
 import com.hobarb.locatadora.utilities.SharedPrefs
 import com.hobarb.locatadora.utilities.secrets
-import java.net.URLEncoder
+import com.hobarb.locatadora.utilities.views.Loader
 import java.util.*
 
 
@@ -127,8 +129,16 @@ class AddAlarmActivity : AppCompatActivity() {
 
         findViewById<MaterialButton>(R.id.btn_setAlarm_ac_login).setOnClickListener {
             uploadToHistory(user)
-            goToTrackUserActivity()
+            if(switch.isChecked)
+            {
+                Toast.makeText(applicationContext, "" + CONSTANTS.ALARM_STUFF.MY_CONTACTS, Toast.LENGTH_SHORT).show()
+            }
+            else
+            {
+                fetchContacts()
 
+
+            }
 
 
 /*
@@ -174,6 +184,7 @@ class AddAlarmActivity : AppCompatActivity() {
 
 
     private fun goToTrackUserActivity() {
+
         val intent = Intent(this@AddAlarmActivity, TrackUserActivity::class.java)
         intent.putExtra("destination", destination.text)
         startActivity(intent)
@@ -210,6 +221,37 @@ class AddAlarmActivity : AppCompatActivity() {
             .addOnFailureListener { e ->
                 Toast.makeText(applicationContext, "Error - " + e.message, Toast.LENGTH_SHORT).show()
             }
+    }
+
+    private fun fetchContacts() {
+        val loader = Loader(this@AddAlarmActivity)
+        loader.showAlertDialog()
+        CONSTANTS.ALARM_STUFF.MY_CONTACTS.clear()
+        val db = FirebaseFirestore.getInstance()
+        val sharedPrefs = SharedPrefs(applicationContext)
+        val identifier = sharedPrefs.readPrefs(CONSTANTS.SHARED_PREF_KEYS.IDENTIFIER)
+        val docRef = db.collection(CONSTANTS.FIRESTORESTUFF.MAINTABLE).document(identifier)
+            .collection(CONSTANTS.FIRESTORESTUFF.CONTACTS)
+        docRef.get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                if (task.result.size() > 1) {
+                    for (documentSnapshot in task.result.documents) {
+                        CONSTANTS.ALARM_STUFF.MY_CONTACTS.add(documentSnapshot[CONSTANTS.MAPKEYS.CONTACT_NUMBER].toString())
+
+                    }
+                   // goToTrackUserActivity()
+                } else {
+                    Toast.makeText(
+                        applicationContext,
+                        "No contacts to display" + task.exception,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                loader.dismissAlertDialog()
+            } else {
+                Toast.makeText(applicationContext, "" + task.exception, Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
 

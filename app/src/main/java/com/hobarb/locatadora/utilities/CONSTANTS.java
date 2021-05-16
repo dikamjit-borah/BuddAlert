@@ -1,5 +1,9 @@
 package com.hobarb.locatadora.utilities;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
 public class CONSTANTS {
 
 
@@ -26,7 +30,8 @@ public class CONSTANTS {
         public static String EVENT_LOCATION = "EVENT_LOCATION";
 
 
-
+        public static String CONTACT_NAME = "CONTACT_NAME";
+        public static String CONTACT_NUMBER = "CONTACT_NUMBER";
     }
 
     public static class FIRESTORESTUFF {
@@ -35,12 +40,15 @@ public class CONSTANTS {
         public static String USERID = "";
         public static String HISTORY = "HISTORY";
         public static String REMINDERS = "REMINDERS";
+        public static String CONTACTS = "CONTACTS";
     }
 
     public static class ALARM_STUFF{
         public static String DESTINATION = "";
         public static int NOTIFY_INTERVAL = 0;
         public static int CHECK_LOCATION_INTERVAL = 5000;
+        public static Set<String> MY_CONTACTS = new HashSet<>();
+
 
 
     }
