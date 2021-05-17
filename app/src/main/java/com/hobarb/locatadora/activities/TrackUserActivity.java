@@ -43,6 +43,7 @@ public class TrackUserActivity extends AppCompatActivity {
     Handler handler;
     Intent serviceIntent;
     TextView current_tv;
+    TextView distance_tv;
     double dest_lat, dest_lng;
     boolean reached_destination = false;
 
@@ -53,7 +54,8 @@ public class TrackUserActivity extends AppCompatActivity {
             double curr_lng = intent.getDoubleExtra(CONSTANTS.BG_STUFF.INTENT_EXTRA_LONGITUDE, 0.0);
             double distance_remaining =  LocationUpdates.calculateDistance(curr_lat, curr_lng, dest_lat, dest_lng);
             CONSTANTS.BG_STUFF.CURRENT_DISTANCE_REMAINING = distance_remaining;
-            current_tv.setText("Distance remaining ~ " + distance_remaining + "km");
+            current_tv.setText("Current Lat/Lng (" + curr_lat + ", " + curr_lng + ")");
+            distance_tv.setText("Distance remaining ~ " + distance_remaining);
 
             reached_destination = intent.getBooleanExtra(CONSTANTS.BG_STUFF.INTENT_EXTRA_REACHED, false);
             if(reached_destination)
@@ -94,9 +96,12 @@ public class TrackUserActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_track_user);
 
+        if(!checkPermissions());
+            requestPermissions();
          serviceIntent = new Intent(this, BackgroundServices.class);
 
          TextView destination_tv = findViewById(R.id.tv_enroute_ac_track);
+         distance_tv = findViewById(R.id.tv_distance_ac_track);
          String s = CONSTANTS.BG_STUFF.DESTINATION_LAT_LNG;
          String s0 = s.replace("lat/lng: ", "");
         String s1 = s0.replace("(", "");

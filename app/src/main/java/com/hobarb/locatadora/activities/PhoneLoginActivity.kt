@@ -163,6 +163,7 @@ class PhoneLoginActivity : AppCompatActivity() {
     private fun goToUserActivity() {
         val intent = Intent(this@PhoneLoginActivity, UserActivity::class.java)
         startActivity(intent)
+        finish()
     }
 
 

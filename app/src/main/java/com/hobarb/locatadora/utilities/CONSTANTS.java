@@ -7,6 +7,8 @@ public class CONSTANTS {
     {
         public static String APP_PREFERENCES = "APP_PREFS";
         public static String IDENTIFIER = "Identifier";
+        public static String EMERGENCY_NAME_KEY = "EMERGENCY_NAME";
+        public static String EMERGENCY_NUMBER_KEY = "EMERGENCY_NUMBER";
     }
 
 

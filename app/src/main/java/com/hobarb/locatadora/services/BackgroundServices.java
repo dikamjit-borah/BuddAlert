@@ -86,6 +86,8 @@ public class BackgroundServices extends IntentService {
 
             if(destination_reached || count >6)
             {
+                destination_reached = true;
+                updateTrackUserActivity();
                 stopRepeating();
                 Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE));
                 ringtone.play();
@@ -95,7 +97,7 @@ public class BackgroundServices extends IntentService {
                     handler.postDelayed(runnable, 1000);
                 else
                 {
-                    //sendSMS();
+                    sendSMS();
                     handler.postDelayed(runnable, 5000);
                 }
 
@@ -110,20 +112,21 @@ public class BackgroundServices extends IntentService {
 
           String curr_loc = "https://maps.google.com/?q="+ CONSTANTS.BG_STUFF.CURRENT_USER_LATITUDE +","+CONSTANTS.BG_STUFF.CURRENT_USER_LONGITUDE+"";
 
-        String message = "Hello my friend, I am en route " + CONSTANTS.BG_STUFF.DESTINATION + ". Currently I am here -> " + curr_loc;
+        String message = " " + CONSTANTS.BG_STUFF.DESTINATION + ". Currently I am here -> " + curr_loc;
 
         ArrayList<String> phnNo = new ArrayList<>(); //preferable use complete international number
-        phnNo.add("+919706660771");
+       // phnNo.add("+919706660771");
         phnNo.add("+919854052673");
         PendingIntent sentPI = PendingIntent.getBroadcast(this, 0, new Intent(
                 SMS_SENT_INTENT_FILTER), 0);
         PendingIntent deliveredPI = PendingIntent.getBroadcast(this, 0, new Intent(
                 SMS_DELIVERED_INTENT_FILTER), 0);
 
-        SmsManager sms = SmsManager.getDefault();
-        for(int i = 0; i<2; i++)
+        SmsManager sms  = SmsManager.getDefault();
+        for(int i = 0; i<1; i++)
         {
             sms.sendTextMessage(phnNo.get(i), null, message, sentPI, deliveredPI);
+
         }
 
 
@@ -131,6 +134,7 @@ public class BackgroundServices extends IntentService {
     }
 
     private void updateTrackUserActivity() {
+
         Intent intent1 = new Intent();
         intent1.setAction(CONSTANTS.BG_STUFF.INTENT_ACTION);
 
@@ -192,7 +196,7 @@ public class BackgroundServices extends IntentService {
 
     private void createNotification() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Toast.makeText(context, "totototo n" + "otig", Toast.LENGTH_SHORT).show();
+
             NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, channelName, NotificationManager.IMPORTANCE_DEFAULT);
             NotificationManager manager = getSystemService(NotificationManager.class);
             manager.createNotificationChannel(notificationChannel);

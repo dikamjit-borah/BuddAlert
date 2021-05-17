@@ -7,4 +7,6 @@
     <string name="history">History</string>
     <string name="contacts">Contacts</string>
     <string name="reminders">Reminders</string>
+    <string name="helpme">Help Me!</string>
+    <string name="signin">Sign In</string>
 </resources>
