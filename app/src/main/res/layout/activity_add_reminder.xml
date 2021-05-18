@@ -33,7 +33,7 @@
                    <ImageView
                        android:layout_width="@dimen/icon_size"
                        android:layout_height="@dimen/icon_size"
-                       android:src="@drawable/ic_baseline_date_range_24">
+                       android:src="@drawable/iconfinder_calendar">
 
                    </ImageView>
                    <TextView
@@ -62,7 +62,7 @@
                    <ImageView
                        android:layout_width="@dimen/icon_size"
                        android:layout_height="@dimen/icon_size"
-                       android:src="@drawable/ic_baseline_more_time_24">
+                       android:src="@drawable/iconfinder_clock">
 
                    </ImageView>
 

@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getSupportActionBar().hide();
          loader = new Loader(MainActivity.this);
 
         SharedPrefs sharedPrefs = new SharedPrefs(this);

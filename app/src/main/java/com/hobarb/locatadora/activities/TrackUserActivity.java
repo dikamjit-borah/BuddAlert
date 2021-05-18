@@ -55,7 +55,7 @@ public class TrackUserActivity extends AppCompatActivity {
             double distance_remaining =  LocationUpdates.calculateDistance(curr_lat, curr_lng, dest_lat, dest_lng);
             CONSTANTS.BG_STUFF.CURRENT_DISTANCE_REMAINING = distance_remaining;
             current_tv.setText("Current Lat/Lng (" + curr_lat + ", " + curr_lng + ")");
-            distance_tv.setText("Distance remaining ~ " + distance_remaining);
+            distance_tv.setText("Distance remaining ~ " + distance_remaining +"km");
 
             reached_destination = intent.getBooleanExtra(CONSTANTS.BG_STUFF.INTENT_EXTRA_REACHED, false);
             if(reached_destination)
@@ -95,6 +95,7 @@ public class TrackUserActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_track_user);
+        getSupportActionBar().setTitle("En route destination");
 
         if(!checkPermissions());
             requestPermissions();

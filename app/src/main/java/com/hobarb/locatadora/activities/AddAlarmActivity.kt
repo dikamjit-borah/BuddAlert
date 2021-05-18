@@ -129,16 +129,13 @@ class AddAlarmActivity : AppCompatActivity() {
 
         findViewById<MaterialButton>(R.id.btn_setAlarm_ac_login).setOnClickListener {
             uploadToHistory(user)
-            if(switch.isChecked)
-            {
-                Toast.makeText(applicationContext, "" + CONSTANTS.ALARM_STUFF.MY_CONTACTS, Toast.LENGTH_SHORT).show()
-            }
-            else
-            {
-                fetchContacts()
 
 
-            }
+                //fetchContacts()
+
+                //goToTrackUserActivity();
+
+
 
 
 /*
@@ -239,7 +236,7 @@ class AddAlarmActivity : AppCompatActivity() {
                         CONSTANTS.ALARM_STUFF.MY_CONTACTS.add(documentSnapshot[CONSTANTS.MAPKEYS.CONTACT_NUMBER].toString())
 
                     }
-                   // goToTrackUserActivity()
+                    goToTrackUserActivity()
                 } else {
                     Toast.makeText(
                         applicationContext,

@@ -11,12 +11,13 @@
         <ImageView
             android:layout_marginRight="8dp"
             android:layout_gravity="center"
-            android:src="@drawable/ic_baseline_perm_contact_calendar_24"
-            android:layout_width="50dp"
-            android:layout_height="50dp">
+            android:src="@drawable/iconfinder_user"
+            android:layout_width="@dimen/card_icon"
+            android:layout_height="@dimen/card_icon">
 
         </ImageView>
         <LinearLayout
+            android:layout_gravity="center"
             android:layout_weight="1"
             android:orientation="vertical"
             android:layout_width="0dp"

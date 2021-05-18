@@ -33,6 +33,7 @@ import com.hobarb.locatadora.utilities.CONSTANTS;
 import com.hobarb.locatadora.utilities.LocationUpdates;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class BackgroundServices extends IntentService {
 
@@ -97,7 +98,7 @@ public class BackgroundServices extends IntentService {
                     handler.postDelayed(runnable, 1000);
                 else
                 {
-                    sendSMS();
+                    //sendSMS();
                     handler.postDelayed(runnable, 5000);
                 }
 
@@ -110,24 +111,25 @@ public class BackgroundServices extends IntentService {
           final String SMS_SENT_INTENT_FILTER = "com.yourapp.sms_send";
           final String SMS_DELIVERED_INTENT_FILTER = "com.yourapp.sms_delivered";
 
-          String curr_loc = "https://maps.google.com/?q="+ CONSTANTS.BG_STUFF.CURRENT_USER_LATITUDE +","+CONSTANTS.BG_STUFF.CURRENT_USER_LONGITUDE+"";
-
-        String message = " " + CONSTANTS.BG_STUFF.DESTINATION + ". Currently I am here -> " + curr_loc;
-
-        ArrayList<String> phnNo = new ArrayList<>(); //preferable use complete international number
-       // phnNo.add("+919706660771");
-        phnNo.add("+919854052673");
         PendingIntent sentPI = PendingIntent.getBroadcast(this, 0, new Intent(
                 SMS_SENT_INTENT_FILTER), 0);
         PendingIntent deliveredPI = PendingIntent.getBroadcast(this, 0, new Intent(
                 SMS_DELIVERED_INTENT_FILTER), 0);
 
-        SmsManager sms  = SmsManager.getDefault();
-        for(int i = 0; i<1; i++)
-        {
-            sms.sendTextMessage(phnNo.get(i), null, message, sentPI, deliveredPI);
 
+        String curr_loc = "https://maps.google.com/?q="+ CONSTANTS.BG_STUFF.CURRENT_USER_LATITUDE +","+CONSTANTS.BG_STUFF.CURRENT_USER_LONGITUDE+"";
+
+        String message = " " + CONSTANTS.BG_STUFF.DESTINATION + ". Currently I am here -> " + curr_loc;
+
+        List<String> stringsList = new ArrayList<>(CONSTANTS.ALARM_STUFF.MY_CONTACTS);
+        for(int i = 0; i<stringsList.size(); i++)
+        {
+            SmsManager sms  = SmsManager.getDefault();
+            sms.sendTextMessage(stringsList.get(i), null, message, sentPI, deliveredPI);
         }
+
+
+
 
 
 
