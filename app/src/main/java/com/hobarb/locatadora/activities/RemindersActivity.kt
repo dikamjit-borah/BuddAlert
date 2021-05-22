@@ -14,10 +14,12 @@ import com.hobarb.locatadora.adapters.RemindersAdapter
 import com.hobarb.locatadora.models.RemindersModel
 import com.hobarb.locatadora.utilities.CONSTANTS
 import com.hobarb.locatadora.utilities.SharedPrefs
+import com.hobarb.locatadora.utilities.views.Loader
 
 class RemindersActivity : AppCompatActivity() {
 
     lateinit var reminders_rv:RecyclerView
+    lateinit var loader:Loader
     lateinit var remindersArraylist:ArrayList<RemindersModel>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,9 +28,12 @@ class RemindersActivity : AppCompatActivity() {
 
         reminders_rv = findViewById(R.id.rv_reminders_ac_rem)
         remindersArraylist = arrayListOf()
+         loader = Loader(this@RemindersActivity);
+
+
 
         getAllReminders()
-       /* val reminderController = ReminderController(applicationContext)
+       /* val reminderController = FirebaseController(applicationContext)
         remindersArraylist =  reminderController.allReminders  //how to await async here, returns empty otherwise
 
        // Toast.makeText(applicationContext, ""+remindersArraylist, Toast.LENGTH_SHORT).show()
@@ -46,6 +51,7 @@ class RemindersActivity : AppCompatActivity() {
     }
 
     fun getAllReminders(){
+        loader.showAlertDialog()
         val db = FirebaseFirestore.getInstance()
         val sharedPrefs = SharedPrefs(applicationContext)
         val identifier = sharedPrefs.readPrefs(CONSTANTS.SHARED_PREF_KEYS.IDENTIFIER)
@@ -69,7 +75,7 @@ class RemindersActivity : AppCompatActivity() {
                 val remindersAdapter = RemindersAdapter(applicationContext, reminderModels!!)
                 reminders_rv!!.setLayoutManager(linearLayoutManager)
                 reminders_rv!!.setAdapter(remindersAdapter)
-
+                loader.dismissAlertDialog()
             }
 
             else {

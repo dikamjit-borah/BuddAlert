@@ -16,6 +16,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
            <TextView
+               android:visibility="gone"
+               android:id="@+id/tv_ifContact_ac_contacts"
                android:layout_gravity="center"
                android:gravity="center"
                android:layout_width="match_parent"
@@ -33,18 +35,34 @@
                     android:layout_weight="1"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"></androidx.recyclerview.widget.RecyclerView>
-                <com.google.android.material.button.MaterialButton
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
 
-                    android:layout_gravity="bottom"
+                    android:layout_gravity="bottom|right"
                     android:id="@+id/btn_addContacts_ac_addContacts"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_baseline_person_add_24"
+                    app:backgroundTint="@color/primary2"
+                    app:tint="@color/white"
+                    android:textStyle="bold">
+
+                </com.google.android.material.floatingactionbutton.FloatingActionButton>
+                <androidx.appcompat.widget.AppCompatButton
+
+                    android:layout_marginTop="4dp"
+                    android:layout_gravity="bottom"
+                    android:textColor="@color/white"
+                    android:id="@+id/btn_saveContacts_ac_addContacts"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/ic_button"
                     android:padding="8dp"
-                    android:text="Add Contacts"
+                    android:text="Save Contacts"
                     android:textStyle="bold">
 
-                </com.google.android.material.button.MaterialButton>
+                </androidx.appcompat.widget.AppCompatButton>
+
 
             </LinearLayout>
         </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -38,6 +38,7 @@
             </TextView>
         </LinearLayout>
         <ImageView
+            android:id="@+id/iv_delete_ca_contact"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_baseline_close_24">

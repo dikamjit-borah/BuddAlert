@@ -37,6 +37,7 @@ import com.hobarb.locatadora.activities.LoginActivity;
 import com.hobarb.locatadora.utilities.CONSTANTS;
 import com.hobarb.locatadora.utilities.LocationUpdates;
 import com.hobarb.locatadora.utilities.SharedPrefs;
+import com.hobarb.locatadora.utilities.views.Loader;
 
 import java.io.File;
 import java.io.IOException;
@@ -57,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     String con_name = "";
     String con_number = "";
     String audioLink = "url";
+    Loader loader;
 
 
 
@@ -64,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+         loader = new Loader(MainActivity.this);
 
         SharedPrefs sharedPrefs = new SharedPrefs(this);
          con_name = sharedPrefs.readPrefs(CONSTANTS.SHARED_PREF_KEYS.EMERGENCY_NAME_KEY);
@@ -81,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
         findViewById(R.id.ll_help_ac_main).setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
@@ -94,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
                 else{
                     if(CheckPermissions())
                     {
+                        loader.showRecordingAlertDialog();
                         getCurrentLocation();
                         startRecording();
                         //sendSMSwithAudio("" +audioLink);
@@ -176,7 +181,6 @@ public class MainActivity extends AppCompatActivity {
         Long tsLong = System.currentTimeMillis();
         String ts = tsLong.toString();
         mFileName += "/LocataDora"+ts+ ".3gp";
-        Toast.makeText(MainActivity.this, "" + mFileName, Toast.LENGTH_SHORT).show();
         mRecorder = new MediaRecorder();
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
@@ -198,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
                 handler.postDelayed(runnable, 1000);
                 Toast.makeText(MainActivity.this, "This method is run every 1 seconds",
                         Toast.LENGTH_SHORT).show();
-                if(count>7)
+                if(count>12)
                 {
                     stopRecording();
 
@@ -215,20 +219,33 @@ public class MainActivity extends AppCompatActivity {
 
         String curr_loc = "https://maps.google.com/?q="+ CONSTANTS.BG_STUFF.CURRENT_USER_LATITUDE +","+CONSTANTS.BG_STUFF.CURRENT_USER_LONGITUDE+"";
 
-        String link = s.equals("")?"null":s;
-        String message = "yo "  +link;
+
+        String message = "Help i am in adnger" + curr_loc + "\n "  +s;
 
         Log.e("yoyo", message);
 
-        Toast.makeText(this, ""+message, Toast.LENGTH_SHORT).show();
-        PendingIntent sentPI = PendingIntent.getBroadcast(this, 0, new Intent(
-                SMS_SENT_INTENT_FILTER), 0);
-        PendingIntent deliveredPI = PendingIntent.getBroadcast(this, 0, new Intent(
-                SMS_DELIVERED_INTENT_FILTER), 0);
 
         SmsManager sms = SmsManager.getDefault();
+        ArrayList<String> parts = sms.divideMessage(message);
 
-        sms.sendTextMessage(con_number, null, message, sentPI, deliveredPI);
+        String SENT = "SMS_SENT";
+        String DELIVERED = "SMS_DELIVERED";
+
+        PendingIntent sentPI = PendingIntent.getBroadcast(this, 0,
+                new Intent(SENT), 0);
+
+        PendingIntent deliveredPI = PendingIntent.getBroadcast(this, 0,
+                new Intent(DELIVERED), 0);
+
+        ArrayList<PendingIntent> sendList = new ArrayList<>();
+        sendList.add(sentPI);
+
+        ArrayList<PendingIntent> deliverList = new ArrayList<>();
+        deliverList.add(deliveredPI);
+
+
+        sms.sendMultipartTextMessage(con_number, null, parts, sendList, deliverList);
+
         Log.e("sent", message);
         //Toast.makeText(this, "SMS sengt", Toast.LENGTH_SHORT).show();
 
@@ -265,7 +282,9 @@ public class MainActivity extends AppCompatActivity {
                   Toast.makeText(MainActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                   e.printStackTrace();
               }
-              sendSMSwithAudio(""+audioLink);
+              loader.dismissAlertDialog();
+              Toast.makeText(getApplicationContext(), "" +CONSTANTS.BG_STUFF.CURRENT_USER_LATITUDE, Toast.LENGTH_SHORT).show();
+              //sendSMSwithAudio(""+audioLink);
           }
           
       }).addOnFailureListener(new OnFailureListener() {

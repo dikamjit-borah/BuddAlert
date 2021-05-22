@@ -7,4 +7,5 @@
     <dimen name="cardBottomMargin">2dp</dimen>
     <dimen name="login_icon_size">40dp</dimen>
     <dimen name="icon_size">40dp</dimen>
+    <dimen name="globalPadding">8dp</dimen>
 </resources>

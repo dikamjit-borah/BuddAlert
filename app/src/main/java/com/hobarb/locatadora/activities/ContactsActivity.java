@@ -1,5 +1,7 @@
 package com.hobarb.locatadora.activities;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,11 +16,24 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.hobarb.locatadora.R;
 import com.hobarb.locatadora.adapters.ContactsAdapter;
+import com.hobarb.locatadora.controllers.FirebaseController;
 import com.hobarb.locatadora.models.ContactsModel;
+import com.hobarb.locatadora.models.RemindersModel;
+import com.hobarb.locatadora.utilities.CONSTANTS;
+import com.hobarb.locatadora.utilities.GlobalFunctions;
+import com.hobarb.locatadora.utilities.SharedPrefs;
+import com.hobarb.locatadora.utilities.views.Loader;
 
 import java.util.ArrayList;
 
@@ -30,7 +45,9 @@ public class ContactsActivity extends AppCompatActivity {
     RecyclerView contacts_rv;
     ArrayList<ContactsModel> contactsModels = new ArrayList<>();
     ContactsAdapter contactsAdapter;
+    TextView isContacts;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +55,9 @@ public class ContactsActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(R.string.contacts);
 
         contacts_rv = findViewById(R.id.rv_contacts_ac_contacts);
+        isContacts = findViewById(R.id.tv_ifContact_ac_contacts);
+
+        fetchContacts();
 
         findViewById(R.id.btn_addContacts_ac_addContacts).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,6 +67,65 @@ public class ContactsActivity extends AppCompatActivity {
 
             }
         });
+
+        findViewById(R.id.btn_saveContacts_ac_addContacts).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                uploadContacts();
+            }
+        });
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void fetchContacts()  {
+
+        Loader loader = new Loader(ContactsActivity.this);
+        loader.showAlertDialog();
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        SharedPrefs sharedPrefs = new SharedPrefs(getApplicationContext());
+        String identifier = sharedPrefs.readPrefs(CONSTANTS.SHARED_PREF_KEYS.IDENTIFIER);
+
+        CollectionReference docRef = db.collection(CONSTANTS.FIRESTORESTUFF.MAINTABLE).document(identifier).collection(CONSTANTS.FIRESTORESTUFF.CONTACTS);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+
+                    if(task.getResult().size()>=1)
+                    {
+                        for ( DocumentSnapshot documentSnapshot:task.getResult().getDocuments()) {
+
+                            ContactsModel contactsModel = new ContactsModel(documentSnapshot.get(CONSTANTS.MAPKEYS.CONTACT_NAME).toString(), documentSnapshot.get(CONSTANTS.MAPKEYS.CONTACT_NUMBER).toString());
+                            contactsModels.add(contactsModel);
+                        }
+                        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext(), RecyclerView.VERTICAL, false);
+                        contactsAdapter = new ContactsAdapter(getApplicationContext(), contactsModels);
+                        contactsAdapter.notifyDataSetChanged();
+                        contacts_rv.setLayoutManager(linearLayoutManager);
+                        contacts_rv.setAdapter(contactsAdapter);
+
+
+                    }
+                    else {
+                        isContacts.setVisibility(View.VISIBLE);
+                        }
+                    loader.dismissAlertDialog();
+
+
+                } else {
+                    Toast.makeText(getApplicationContext(), "" + task.getException(), Toast.LENGTH_SHORT).show();
+
+                }
+
+            }
+        });
+    }
+
+    private void uploadContacts() {
+
+        FirebaseController firebaseController = new FirebaseController(this);
+        firebaseController.addContactsToDb(contactsModels);
     }
 
     private void checkPermissions() {
@@ -118,7 +197,7 @@ public class ContactsActivity extends AppCompatActivity {
                     }
 
                     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext(), RecyclerView.VERTICAL, false);
-                    contactsAdapter = new ContactsAdapter(getApplicationContext(), contactsModels);
+                    contactsAdapter = new ContactsAdapter(ContactsActivity.this, contactsModels);
                     contacts_rv.setLayoutManager(linearLayoutManager);
                     contacts_rv.setAdapter(contactsAdapter);
 

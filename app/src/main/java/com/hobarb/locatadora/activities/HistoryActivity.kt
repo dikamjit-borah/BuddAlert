@@ -11,6 +11,7 @@ import com.hobarb.locatadora.adapters.HistoryAdapter
 import com.hobarb.locatadora.models.HistoryModel
 import com.hobarb.locatadora.utilities.CONSTANTS
 import com.hobarb.locatadora.utilities.SharedPrefs
+import com.hobarb.locatadora.utilities.views.Loader
 
 class HistoryActivity : AppCompatActivity() {
 
@@ -32,7 +33,9 @@ class HistoryActivity : AppCompatActivity() {
         historyModels = arrayListOf()
         recyclerView = findViewById(R.id.rv_history_ac_history)
 
+        val loader:Loader = Loader(this@HistoryActivity);
 
+        loader.showAlertDialog()
         sharedPrefs = SharedPrefs(applicationContext)
 
         identifier = sharedPrefs.readPrefs(CONSTANTS.SHARED_PREF_KEYS.IDENTIFIER);
@@ -54,7 +57,7 @@ class HistoryActivity : AppCompatActivity() {
                     historyAdapter = HistoryAdapter(applicationContext, historyModels!!)
                     recyclerView!!.setLayoutManager(linearLayoutManager)
                     recyclerView!!.setAdapter(historyAdapter)
-
+                    loader.dismissAlertDialog()
 
 
 

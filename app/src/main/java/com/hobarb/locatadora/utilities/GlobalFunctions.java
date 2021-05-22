@@ -1,8 +1,16 @@
 package com.hobarb.locatadora.utilities;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Build;
+import android.view.LayoutInflater;
+import android.view.View;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.hobarb.locatadora.R;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -16,6 +24,7 @@ public class GlobalFunctions {
         LocalDateTime now = LocalDateTime.now();
         return (dtf.format(now));
     }
+
 
 
 
