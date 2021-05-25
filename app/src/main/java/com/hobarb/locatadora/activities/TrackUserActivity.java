@@ -14,10 +14,13 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Vibrator;
 import android.provider.Settings;
 import android.view.View;
 import android.widget.TextView;
@@ -46,6 +49,8 @@ public class TrackUserActivity extends AppCompatActivity {
     TextView distance_tv;
     double dest_lat, dest_lng;
     boolean reached_destination = false;
+    Ringtone ringtone;;
+    Vibrator vibe;
 
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -61,6 +66,14 @@ public class TrackUserActivity extends AppCompatActivity {
             if(reached_destination)
             {
                 findViewById(R.id.ll_destReached_ac_track).setVisibility(View.VISIBLE);
+                    vibe.vibrate(6000);
+
+
+
+                    ringtone = RingtoneManager.getRingtone(getApplicationContext(), RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE));
+                    ringtone.play();
+
+
             }
 
 
@@ -103,6 +116,7 @@ public class TrackUserActivity extends AppCompatActivity {
 
 
 
+         vibe= (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
          TextView destination_tv = findViewById(R.id.tv_enroute_ac_track);
          distance_tv = findViewById(R.id.tv_distance_ac_track);
          String s = CONSTANTS.BG_STUFF.DESTINATION_LAT_LNG;
@@ -122,6 +136,9 @@ public class TrackUserActivity extends AppCompatActivity {
             findViewById(R.id.btn_stopAlarm_ac_track).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    ringtone.stop();
+                    vibe.cancel();
+                    CONSTANTS.ALARM_STUFF.stop_alarm = true;
                     Toast.makeText(TrackUserActivity.this, "Alarm stopped", Toast.LENGTH_SHORT).show();
                 }
             });

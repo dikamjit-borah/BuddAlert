@@ -73,11 +73,8 @@ public class BackgroundServices extends IntentService {
             count++;
             LocationUpdates.requestNewLocationData(mFusedLocationClient, context);
 
-            Toast.makeText(context, "Service "+ count, Toast.LENGTH_SHORT).show();
-
             updateTrackUserActivity();
 
-            Toast.makeText(context, "" + CONSTANTS.BG_STUFF.CURRENT_DISTANCE_REMAINING, Toast.LENGTH_SHORT).show();
             if(CONSTANTS.BG_STUFF.CURRENT_DISTANCE_REMAINING<2)
             {
                 destination_reached = true;
@@ -85,20 +82,18 @@ public class BackgroundServices extends IntentService {
                 Toast.makeText(context, "Destination reached", Toast.LENGTH_SHORT).show();
             }
 
-            if(destination_reached || count >6)
+            if(destination_reached || count >3)
             {
                 destination_reached = true;
                 updateTrackUserActivity();
                 stopRepeating();
-                Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE));
-                ringtone.play();
             }
             else{
                 if(CONSTANTS.BG_STUFF.CURRENT_USER_LATITUDE == 0.0 || CONSTANTS.BG_STUFF.CURRENT_USER_LONGITUDE == 0.0)
                     handler.postDelayed(runnable, 1000);
                 else
                 {
-                    //sendSMS();
+                    sendSMS();
                     handler.postDelayed(runnable, 5000);
                 }
 
@@ -119,7 +114,7 @@ public class BackgroundServices extends IntentService {
 
         String curr_loc = "https://maps.google.com/?q="+ CONSTANTS.BG_STUFF.CURRENT_USER_LATITUDE +","+CONSTANTS.BG_STUFF.CURRENT_USER_LONGITUDE+"";
 
-        String message = " " + CONSTANTS.BG_STUFF.DESTINATION + ". Currently I am here -> " + curr_loc;
+        String message = "Hi. I am en route " + CONSTANTS.BG_STUFF.DESTINATION + ". Currently I am here -> " + curr_loc;
 
         List<String> stringsList = new ArrayList<>(CONSTANTS.ALARM_STUFF.MY_CONTACTS);
         for(int i = 0; i<stringsList.size(); i++)

@@ -2,6 +2,7 @@ package com.hobarb.locatadora;
 
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.media.MediaRecorder;
@@ -42,6 +43,9 @@ import com.hobarb.locatadora.utilities.views.Loader;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -92,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
 
-                if(con_number=="" || con_number.isEmpty())
+                if(con_number=="" || con_number.isEmpty()) //or undefined key, undefined key
                 {
                     Toast.makeText(MainActivity.this, "Set an emergency contact first!", Toast.LENGTH_SHORT).show();
                 }
@@ -102,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
                         loader.showRecordingAlertDialog();
                         getCurrentLocation();
                         startRecording();
-                        //sendSMSwithAudio("" +audioLink);
+
                     }
                     else {
                         RequestPermissions();
@@ -144,7 +148,13 @@ public class MainActivity extends AppCompatActivity {
                 SharedPrefs sharedPrefs = new SharedPrefs(this);
                     sharedPrefs.writePrefs(CONSTANTS.SHARED_PREF_KEYS.EMERGENCY_NAME_KEY,""+name);
                 sharedPrefs.writePrefs(CONSTANTS.SHARED_PREF_KEYS.EMERGENCY_NUMBER_KEY,""+number);
-                tv_emergency_contact.setText(name + ", " + number);
+
+                con_name = sharedPrefs.readPrefs(CONSTANTS.SHARED_PREF_KEYS.EMERGENCY_NAME_KEY);
+                con_number = sharedPrefs.readPrefs(CONSTANTS.SHARED_PREF_KEYS.EMERGENCY_NUMBER_KEY);
+
+
+                tv_emergency_contact.setText(con_name + ", " + con_number);
+
 
 
                 //contactEmail.setText(email);
@@ -159,8 +169,6 @@ public class MainActivity extends AppCompatActivity {
         handler1.postDelayed(runnable = new Runnable() {
             public void run() {
                LocationUpdates.requestNewLocationData(mFusedLocationClient, getApplicationContext());
-
-                Toast.makeText(getApplicationContext(), "TOT"+ CONSTANTS.BG_STUFF.CURRENT_USER_LATITUDE + ", " + CONSTANTS.BG_STUFF.CURRENT_USER_LONGITUDE , Toast.LENGTH_SHORT).show();
 
                 if(CONSTANTS.BG_STUFF.CURRENT_USER_LATITUDE != 0.0 && CONSTANTS.BG_STUFF.CURRENT_USER_LONGITUDE!= 0.0)
                 {
@@ -201,8 +209,6 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 count++;
                 handler.postDelayed(runnable, 1000);
-                Toast.makeText(MainActivity.this, "This method is run every 1 seconds",
-                        Toast.LENGTH_SHORT).show();
                 if(count>12)
                 {
                     stopRecording();
@@ -221,10 +227,7 @@ public class MainActivity extends AppCompatActivity {
         String curr_loc = "https://maps.google.com/?q="+ CONSTANTS.BG_STUFF.CURRENT_USER_LATITUDE +","+CONSTANTS.BG_STUFF.CURRENT_USER_LONGITUDE+"";
 
 
-        String message = "Help i am in adnger" + curr_loc + "\n "  +s;
-
-        Log.e("yoyo", message);
-
+        String message = "Help! I am in danger. My location -> " + curr_loc + " Audio sample -> "  +s;
 
         SmsManager sms = SmsManager.getDefault();
         ArrayList<String> parts = sms.divideMessage(message);
@@ -245,13 +248,46 @@ public class MainActivity extends AppCompatActivity {
         deliverList.add(deliveredPI);
 
 
-        sms.sendMultipartTextMessage(con_number, null, parts, sendList, deliverList);
+       sms.sendMultipartTextMessage(con_number, null, parts, sendList, deliverList);
+        Toast.makeText(this, "SMS sent to " + con_number, Toast.LENGTH_SHORT).show();
 
-        Log.e("sent", message);
-        //Toast.makeText(this, "SMS sengt", Toast.LENGTH_SHORT).show();
+        SharedPreferences sharedpreferences = getSharedPreferences(
+                CONSTANTS.SHARED_PREF_KEYS.APP_PREFERENCES,
+                MODE_PRIVATE
+        );
+        Set<String> set = sharedpreferences.getStringSet(CONSTANTS.SHARED_PREF_KEYS.MY_CONTACTS_KEY, null);
+
+        if(set != null)
+        {
+            Iterator value = set.iterator();
+            while (value.hasNext()) {
+                sms.sendMultipartTextMessage(value.next().toString(), null, parts, sendList, deliverList);
+                Toast.makeText(this, "SMS sent to " + value.next(), Toast.LENGTH_SHORT).show();
+            }
+        }
+
+
+
+/*
+
+        List<String> stringsList = new ArrayList<>(CONSTANTS.ALARM_STUFF.MY_CONTACTS);
+        if(stringsList.size()>0)
+        {
+            for(int i = 0; i<stringsList.size(); i++)
+            {
+                SmsManager sms  = SmsManager.getDefault();
+                sms.sendTextMessage(stringsList.get(i), null, message, sentPI, deliveredPI);
+            }
+        }
+
+*/
+
+
+
 
 
     }
+
 
 
     public void stopRepeating(Handler handler, Runnable runnable) {
@@ -284,8 +320,7 @@ public class MainActivity extends AppCompatActivity {
                   e.printStackTrace();
               }
               loader.dismissAlertDialog();
-              Toast.makeText(getApplicationContext(), "" +CONSTANTS.BG_STUFF.CURRENT_USER_LATITUDE, Toast.LENGTH_SHORT).show();
-              //sendSMSwithAudio(""+audioLink);
+              sendSMSwithAudio(""+audioLink);
           }
           
       }).addOnFailureListener(new OnFailureListener() {
