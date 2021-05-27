@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -25,8 +26,10 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.gson.Gson;
 import com.hobarb.locatadora.R;
 import com.hobarb.locatadora.adapters.ContactsAdapter;
+import com.hobarb.locatadora.controllers.Contacts;
 import com.hobarb.locatadora.controllers.FirebaseController;
 import com.hobarb.locatadora.models.ContactsModel;
 import com.hobarb.locatadora.models.RemindersModel;
@@ -35,7 +38,10 @@ import com.hobarb.locatadora.utilities.GlobalFunctions;
 import com.hobarb.locatadora.utilities.SharedPrefs;
 import com.hobarb.locatadora.utilities.views.Loader;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ContactsActivity extends AppCompatActivity {
 
@@ -72,6 +78,7 @@ public class ContactsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 uploadContacts();
+                fetchContacts();
             }
         });
     }
@@ -79,13 +86,13 @@ public class ContactsActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void fetchContacts()  {
 
+        contactsModels.clear();
         Loader loader = new Loader(ContactsActivity.this);
         loader.showAlertDialog();
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         SharedPrefs sharedPrefs = new SharedPrefs(getApplicationContext());
         String identifier = sharedPrefs.readPrefs(CONSTANTS.SHARED_PREF_KEYS.IDENTIFIER);
-
         CollectionReference docRef = db.collection(CONSTANTS.FIRESTORESTUFF.MAINTABLE).document(identifier).collection(CONSTANTS.FIRESTORESTUFF.CONTACTS);
         docRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -94,9 +101,16 @@ public class ContactsActivity extends AppCompatActivity {
 
                     if(task.getResult().size()>=1)
                     {
+
+                        ArrayList<String> contact_numbers = new ArrayList<>();
+
                         for ( DocumentSnapshot documentSnapshot:task.getResult().getDocuments()) {
 
-                            ContactsModel contactsModel = new ContactsModel(documentSnapshot.get(CONSTANTS.MAPKEYS.CONTACT_NAME).toString(), documentSnapshot.get(CONSTANTS.MAPKEYS.CONTACT_NUMBER).toString());
+                            String contact_name = documentSnapshot.get(CONSTANTS.MAPKEYS.CONTACT_NAME).toString();
+                            String contact_number =  documentSnapshot.get(CONSTANTS.MAPKEYS.CONTACT_NUMBER).toString();
+
+                            contact_numbers.add(contact_number);
+                            ContactsModel contactsModel = new ContactsModel(contact_name, contact_number);
                             contactsModels.add(contactsModel);
                         }
                         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext(), RecyclerView.VERTICAL, false);
@@ -105,12 +119,25 @@ public class ContactsActivity extends AppCompatActivity {
                         contacts_rv.setLayoutManager(linearLayoutManager);
                         contacts_rv.setAdapter(contactsAdapter);
 
+                        SharedPreferences sharedpreferences = getSharedPreferences(
+                                CONSTANTS.SHARED_PREF_KEYS.APP_PREFERENCES,
+                                MODE_PRIVATE
+                        );
+
+                        SharedPreferences.Editor editor = sharedpreferences.edit();
+                        Gson gson = new Gson();
+                        String json = gson.toJson(contact_numbers);
+                        editor.putString(CONSTANTS.SHARED_PREF_KEYS.MY_CONTACTS_KEY,json);
+                        editor.apply();
+
+
 
                     }
                     else {
                         isContacts.setVisibility(View.VISIBLE);
                         }
                     loader.dismissAlertDialog();
+
 
 
                 } else {
@@ -206,6 +233,7 @@ public class ContactsActivity extends AppCompatActivity {
                 break;
         }
     }
+
 
 
 }

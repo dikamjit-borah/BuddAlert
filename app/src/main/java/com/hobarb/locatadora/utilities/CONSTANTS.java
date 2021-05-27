@@ -63,6 +63,10 @@ public class CONSTANTS {
         public static double CURRENT_USER_LONGITUDE = 0.0;
         public static double DESTINATION_LATITUDE = 0.0;
         public static double DESTINATION_LONGITUDE = 0.0;
+
+        public static boolean SEND_NOTIFICATIONS = false;
+        public static long DELAY_MILLISECONDS = 60000;
+
         public static String DESTINATION = "";
         public static double CURRENT_DISTANCE_REMAINING = 1000;
 

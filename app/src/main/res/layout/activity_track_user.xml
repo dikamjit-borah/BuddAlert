@@ -65,7 +65,7 @@
                     app:cardElevation="@dimen/cardElevation">
 
                     <LinearLayout
-                        android:visibility="gone"
+                        android:visibility="invisible"
                         android:id="@+id/ll_destReached_ac_track"
                         android:layout_width="match_parent"
 

@@ -26,12 +26,16 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
 import com.hobarb.locatadora.R;
 import com.hobarb.locatadora.activities.TrackUserActivity;
 import com.hobarb.locatadora.activities.UserActivity;
 import com.hobarb.locatadora.utilities.CONSTANTS;
 import com.hobarb.locatadora.utilities.LocationUpdates;
+import com.hobarb.locatadora.utilities.SharedPrefs;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,14 +79,14 @@ public class BackgroundServices extends IntentService {
 
             updateTrackUserActivity();
 
-            if(CONSTANTS.BG_STUFF.CURRENT_DISTANCE_REMAINING<2)
+            if(CONSTANTS.BG_STUFF.CURRENT_DISTANCE_REMAINING<1)
             {
                 destination_reached = true;
                 updateTrackUserActivity();
                 Toast.makeText(context, "Destination reached", Toast.LENGTH_SHORT).show();
             }
 
-            if(destination_reached || count >3)
+            if(destination_reached)
             {
                 destination_reached = true;
                 updateTrackUserActivity();
@@ -93,8 +97,9 @@ public class BackgroundServices extends IntentService {
                     handler.postDelayed(runnable, 1000);
                 else
                 {
-                    sendSMS();
-                    handler.postDelayed(runnable, 5000);
+                    if (CONSTANTS.BG_STUFF.SEND_NOTIFICATIONS)
+                        sendSMS();
+                    handler.postDelayed(runnable, CONSTANTS.BG_STUFF.DELAY_MILLISECONDS);
                 }
 
             }
@@ -116,11 +121,16 @@ public class BackgroundServices extends IntentService {
 
         String message = "Hi. I am en route " + CONSTANTS.BG_STUFF.DESTINATION + ". Currently I am here -> " + curr_loc;
 
-        List<String> stringsList = new ArrayList<>(CONSTANTS.ALARM_STUFF.MY_CONTACTS);
-        for(int i = 0; i<stringsList.size(); i++)
+        Gson gson =  new Gson();
+        String json = new SharedPrefs(context).readPrefs(CONSTANTS.SHARED_PREF_KEYS.MY_CONTACTS_KEY);
+
+        Type type =  new TypeToken<ArrayList<String>>(){}.getType();
+        ArrayList<String> contact_numbers = gson.fromJson(json, type);
+
+        for(int i = 0; i<contact_numbers.size(); i++)
         {
             SmsManager sms  = SmsManager.getDefault();
-            sms.sendTextMessage(stringsList.get(i), null, message, sentPI, deliveredPI);
+            sms.sendTextMessage(contact_numbers.get(i), null, message, sentPI, deliveredPI);
         }
 
 
