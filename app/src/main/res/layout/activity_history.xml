@@ -24,7 +24,6 @@
 
                 </androidx.recyclerview.widget.RecyclerView>                <TextView
                     android:layout_gravity="center"
-                    android:visibility="gone"
                     android:text="No history currently"
                     android:gravity="center"
                     android:layout_width="match_parent"

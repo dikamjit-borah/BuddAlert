@@ -1,54 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView
 
+    android:layout_marginBottom="@dimen/cardBottomMargin"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/cardBottomMargin">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:layout_margin="@dimen/marginParent"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:layout_width="@dimen/card_icon"
-            android:layout_height="@dimen/card_icon"
-            android:layout_gravity="center"
-            android:src="@drawable/iconfinder_marker">
-
-        </ImageView>
-
-        <LinearLayout
-            android:layout_gravity="center"
-            android:layout_marginLeft="8dp"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/tv_datetime_ca_history"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="DATETIME">
 
-            android:orientation="vertical">
+        </TextView>
+        <TextView
+            android:id="@+id/tv_location_ca_history"
+            android:textSize="@dimen/titleSize"
+            android:textStyle="bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="LOCATION">
 
-            <TextView
-                android:id="@+id/tv_datetime_ca_history"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="DATETIME">
-
-            </TextView>
-
-            <TextView
-                android:id="@+id/tv_location_ca_history"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="LOCATION"
-                android:textSize="@dimen/titleSize"
-                android:textStyle="bold">
-
-            </TextView>
+        </TextView>
 
 
-        </LinearLayout>
     </LinearLayout>
 
 
