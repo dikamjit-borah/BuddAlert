@@ -2,15 +2,12 @@ package com.hobarb.locatadora.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import android.widget.LinearLayout
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.common.api.Status
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
@@ -20,16 +17,16 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.hobarb.locatadora.R
-import com.hobarb.locatadora.adapters.ContactsAdapter
-import com.hobarb.locatadora.models.ContactsModel
 import com.hobarb.locatadora.services.BackgroundServices
 import com.hobarb.locatadora.utilities.CONSTANTS
 import com.hobarb.locatadora.utilities.GlobalFunctions
 import com.hobarb.locatadora.utilities.SharedPrefs
 import com.hobarb.locatadora.utilities.secrets
-import com.hobarb.locatadora.utilities.views.Loader
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class AddAlarmActivity : AppCompatActivity() {
@@ -94,14 +91,19 @@ class AddAlarmActivity : AppCompatActivity() {
         val switch = findViewById<SwitchMaterial>(R.id.sw_notify_ac_addAlarm)
         val interval_ll = findViewById<LinearLayout>(R.id.ll_interval_ac_addAlarm)
         switch.setOnClickListener{
+            CONSTANTS.BG_STUFF.SEND_NOTIFICATIONS = switch.isChecked
             if(switch.isChecked)
             {
-                interval_ll.visibility = View.VISIBLE
-            }
-            else
-            {
-                interval_ll.visibility = View.INVISIBLE 
-            }
+                val gson = Gson();
+                val json = SharedPrefs(this@AddAlarmActivity).readPrefs(CONSTANTS.SHARED_PREF_KEYS.MY_CONTACTS_KEY)
+
+                val type = object : TypeToken<ArrayList<String>>() {}.type
+                val mExampleList:ArrayList<String> = gson.fromJson(json, type)
+
+                Toast.makeText(applicationContext, "Notifications will be sent to the following numbers " + mExampleList, Toast.LENGTH_SHORT).show() }
+
+
+
         }
 
         val interval_sb = findViewById<SeekBar>(R.id.sb_interval_ac_addAlarm)
@@ -111,6 +113,7 @@ class AddAlarmActivity : AppCompatActivity() {
             var pval = 0
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                 pval = progress
+                CONSTANTS.BG_STUFF.DELAY_MILLISECONDS = pval.toLong() * 60000
                 interval_tv.setText(pval.toString() + " mins")
             }
 
@@ -129,59 +132,13 @@ class AddAlarmActivity : AppCompatActivity() {
 
         findViewById<MaterialButton>(R.id.btn_setAlarm_ac_login).setOnClickListener {
             uploadToHistory(user)
-            if(switch.isChecked)
-            {
-                Toast.makeText(applicationContext, "" + CONSTANTS.ALARM_STUFF.MY_CONTACTS, Toast.LENGTH_SHORT).show()
-            }
-            else
-            {
-                fetchContacts()
-
-
-            }
-
-
-/*
-
-            Toast.makeText(applicationContext, "ÿoyoyoyo", Toast.LENGTH_SHORT).show()
-            val curr_loc =
-                "https://maps.google.com/?q=<" + CONSTANTS.BG_STUFF.CURRENT_USER_LATITUDE + ">,<" + CONSTANTS.BG_STUFF.CURRENT_USER_LONGITUDE + ">"
-
-            val message =
-                "Hello my friends, I am en route " + CONSTANTS.BG_STUFF.DESTINATION + ". Currently I am here -> " + curr_loc
-
-            val phnNo = "+918471925921"
-
-          */
-/*  val intent = Intent(Intent.ACTION_SEND)
-            intent.data =
-                Uri.parse("http://api.whatsapp.com/send?phone=" + phnNo.toString() + "&text=" + message)
-            startActivity(intent)*//*
-
-
-            val url = "https://api.whatsapp.com/send?phone=" + phnNo + "&text=" + URLEncoder.encode(message, "UTF-8")
-
-            val it = intent.setPackage("com.whatsapp")
-            intent.data = Uri.parse(url)
-
-            startActivity(intent)
-*/
-
-
+            goToTrackUserActivity();
 
         }
 
 
 
     }
-
-    private fun getUserCurrentLocation() {
-        //getLastLocation()
-    }
-
-
-
-
 
     private fun goToTrackUserActivity() {
 
@@ -222,41 +179,4 @@ class AddAlarmActivity : AppCompatActivity() {
                 Toast.makeText(applicationContext, "Error - " + e.message, Toast.LENGTH_SHORT).show()
             }
     }
-
-    private fun fetchContacts() {
-        val loader = Loader(this@AddAlarmActivity)
-        loader.showAlertDialog()
-        CONSTANTS.ALARM_STUFF.MY_CONTACTS.clear()
-        val db = FirebaseFirestore.getInstance()
-        val sharedPrefs = SharedPrefs(applicationContext)
-        val identifier = sharedPrefs.readPrefs(CONSTANTS.SHARED_PREF_KEYS.IDENTIFIER)
-        val docRef = db.collection(CONSTANTS.FIRESTORESTUFF.MAINTABLE).document(identifier)
-            .collection(CONSTANTS.FIRESTORESTUFF.CONTACTS)
-        docRef.get().addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                if (task.result.size() > 1) {
-                    for (documentSnapshot in task.result.documents) {
-                        CONSTANTS.ALARM_STUFF.MY_CONTACTS.add(documentSnapshot[CONSTANTS.MAPKEYS.CONTACT_NUMBER].toString())
-
-                    }
-                   // goToTrackUserActivity()
-                } else {
-                    Toast.makeText(
-                        applicationContext,
-                        "No contacts to display" + task.exception,
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-                loader.dismissAlertDialog()
-            } else {
-                Toast.makeText(applicationContext, "" + task.exception, Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
-
-
-
-
-
 }

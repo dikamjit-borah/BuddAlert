@@ -28,6 +28,7 @@ class UserActivity : AppCompatActivity() {
 
     lateinit var remToday_tv:TextView
     lateinit var formattedDate: String
+    lateinit var formattedTime: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,18 +77,21 @@ class UserActivity : AppCompatActivity() {
 
     private fun fetchNotificationsToday() {
         loader.showAlertDialog()
-        getDateToday()
+        dateTodayAndTimeNow()
         getAllReminders()
 
     }
 
-    private fun getDateToday() {
+    private fun dateTodayAndTimeNow() {
 
         val c: Date = Calendar.getInstance().getTime()
 
         val df = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
         formattedDate = df.format(c)
-        remToday_tv.text = "Reminders for today $formattedDate"
+
+        val delegate = "hh:mm aaa"
+        //formattedTime
+        //Toast.makeText(applicationContext, "" + formattedTime, Toast.LENGTH_SHORT).show()
     }
 
     fun getAllReminders(){
@@ -102,15 +106,33 @@ class UserActivity : AppCompatActivity() {
         docRef.get().addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 for (documentSnapshot in task.result.documents) {
-                    if(documentSnapshot[CONSTANTS.MAPKEYS.EVENT_DATE].toString().equals(formattedDate.toString()))
+
+                    if(documentSnapshot[CONSTANTS.MAPKEYS.EVENT_DATE].toString().equals(
+                                    formattedDate.toString()
+                            ))
                     {
-                        val reminder = RemindersModel(
-                            documentSnapshot[CONSTANTS.MAPKEYS.EVENT_DATE].toString(),
-                            documentSnapshot[CONSTANTS.MAPKEYS.EVENT_TIME].toString(),
-                            documentSnapshot[CONSTANTS.MAPKEYS.EVENT_LOCATION].toString(),
-                            documentSnapshot[CONSTANTS.MAPKEYS.EVENT_NAME].toString()
-                        )
-                        reminderModels.add(reminder)
+                        var reminderTime = documentSnapshot[CONSTANTS.MAPKEYS.EVENT_TIME].toString()
+                         reminderTime = reminderTime.replace("-", ":")
+
+                        val displayFormat = SimpleDateFormat("HH:mm")
+                        val parseFormat = SimpleDateFormat("hh:mm a")
+                        val date = parseFormat.parse(reminderTime)
+                        val reminderTimeIn24Hr = displayFormat.format(date).replace(":", "")
+                        val sdf = SimpleDateFormat("HH:mm")
+                        val str = sdf.format(Date()).replace(":", "")
+
+                        Toast.makeText(applicationContext, str + ", " + reminderTimeIn24Hr, Toast.LENGTH_SHORT).show()
+                        if(Integer.parseInt(reminderTimeIn24Hr)>Integer.parseInt(str))
+                        {
+                            val reminder = RemindersModel(
+                                    documentSnapshot[CONSTANTS.MAPKEYS.EVENT_DATE].toString(),
+                                    documentSnapshot[CONSTANTS.MAPKEYS.EVENT_TIME].toString(),
+                                    documentSnapshot[CONSTANTS.MAPKEYS.EVENT_LOCATION].toString(),
+                                    documentSnapshot[CONSTANTS.MAPKEYS.EVENT_NAME].toString()
+                            )
+                            reminderModels.add(reminder)
+                        }
+
 
                     }
                 }

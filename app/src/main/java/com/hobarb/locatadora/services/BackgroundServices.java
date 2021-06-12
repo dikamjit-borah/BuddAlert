@@ -26,13 +26,18 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
 import com.hobarb.locatadora.R;
 import com.hobarb.locatadora.activities.TrackUserActivity;
 import com.hobarb.locatadora.activities.UserActivity;
 import com.hobarb.locatadora.utilities.CONSTANTS;
 import com.hobarb.locatadora.utilities.LocationUpdates;
+import com.hobarb.locatadora.utilities.SharedPrefs;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 
 public class BackgroundServices extends IntentService {
 
@@ -72,33 +77,29 @@ public class BackgroundServices extends IntentService {
             count++;
             LocationUpdates.requestNewLocationData(mFusedLocationClient, context);
 
-            Toast.makeText(context, "Service "+ count, Toast.LENGTH_SHORT).show();
-
             updateTrackUserActivity();
 
-            Toast.makeText(context, "" + CONSTANTS.BG_STUFF.CURRENT_DISTANCE_REMAINING, Toast.LENGTH_SHORT).show();
-            if(CONSTANTS.BG_STUFF.CURRENT_DISTANCE_REMAINING<2)
+            if(CONSTANTS.BG_STUFF.CURRENT_DISTANCE_REMAINING<1)
             {
                 destination_reached = true;
                 updateTrackUserActivity();
                 Toast.makeText(context, "Destination reached", Toast.LENGTH_SHORT).show();
             }
 
-            if(destination_reached || count >6)
+            if(destination_reached)
             {
                 destination_reached = true;
                 updateTrackUserActivity();
                 stopRepeating();
-                Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE));
-                ringtone.play();
             }
             else{
                 if(CONSTANTS.BG_STUFF.CURRENT_USER_LATITUDE == 0.0 || CONSTANTS.BG_STUFF.CURRENT_USER_LONGITUDE == 0.0)
                     handler.postDelayed(runnable, 1000);
                 else
                 {
-                    sendSMS();
-                    handler.postDelayed(runnable, 5000);
+                    if (CONSTANTS.BG_STUFF.SEND_NOTIFICATIONS)
+                        sendSMS();
+                    handler.postDelayed(runnable, CONSTANTS.BG_STUFF.DELAY_MILLISECONDS);
                 }
 
             }
@@ -110,24 +111,30 @@ public class BackgroundServices extends IntentService {
           final String SMS_SENT_INTENT_FILTER = "com.yourapp.sms_send";
           final String SMS_DELIVERED_INTENT_FILTER = "com.yourapp.sms_delivered";
 
-          String curr_loc = "https://maps.google.com/?q="+ CONSTANTS.BG_STUFF.CURRENT_USER_LATITUDE +","+CONSTANTS.BG_STUFF.CURRENT_USER_LONGITUDE+"";
-
-        String message = " " + CONSTANTS.BG_STUFF.DESTINATION + ". Currently I am here -> " + curr_loc;
-
-        ArrayList<String> phnNo = new ArrayList<>(); //preferable use complete international number
-       // phnNo.add("+919706660771");
-        phnNo.add("+919854052673");
         PendingIntent sentPI = PendingIntent.getBroadcast(this, 0, new Intent(
                 SMS_SENT_INTENT_FILTER), 0);
         PendingIntent deliveredPI = PendingIntent.getBroadcast(this, 0, new Intent(
                 SMS_DELIVERED_INTENT_FILTER), 0);
 
-        SmsManager sms  = SmsManager.getDefault();
-        for(int i = 0; i<1; i++)
-        {
-            sms.sendTextMessage(phnNo.get(i), null, message, sentPI, deliveredPI);
 
+        String curr_loc = "https://maps.google.com/?q="+ CONSTANTS.BG_STUFF.CURRENT_USER_LATITUDE +","+CONSTANTS.BG_STUFF.CURRENT_USER_LONGITUDE+"";
+
+        String message = "Hi. I am en route " + CONSTANTS.BG_STUFF.DESTINATION + ". Currently I am here -> " + curr_loc;
+
+        Gson gson =  new Gson();
+        String json = new SharedPrefs(context).readPrefs(CONSTANTS.SHARED_PREF_KEYS.MY_CONTACTS_KEY);
+
+        Type type =  new TypeToken<ArrayList<String>>(){}.getType();
+        ArrayList<String> contact_numbers = gson.fromJson(json, type);
+
+        for(int i = 0; i<contact_numbers.size(); i++)
+        {
+            SmsManager sms  = SmsManager.getDefault();
+            sms.sendTextMessage(contact_numbers.get(i), null, message, sentPI, deliveredPI);
         }
+
+
+
 
 
 

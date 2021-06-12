@@ -13,6 +13,7 @@ public class CONSTANTS {
         public static String IDENTIFIER = "Identifier";
         public static String EMERGENCY_NAME_KEY = "EMERGENCY_NAME";
         public static String EMERGENCY_NUMBER_KEY = "EMERGENCY_NUMBER";
+        public static String MY_CONTACTS_KEY = "MY_CONTACTS";
     }
 
 
@@ -49,6 +50,9 @@ public class CONSTANTS {
         public static int CHECK_LOCATION_INTERVAL = 5000;
         public static Set<String> MY_CONTACTS = new HashSet<>();
 
+        public static boolean stop_alarm = false;
+
+
 
 
     }
@@ -59,6 +63,10 @@ public class CONSTANTS {
         public static double CURRENT_USER_LONGITUDE = 0.0;
         public static double DESTINATION_LATITUDE = 0.0;
         public static double DESTINATION_LONGITUDE = 0.0;
+
+        public static boolean SEND_NOTIFICATIONS = false;
+        public static long DELAY_MILLISECONDS = 60000;
+
         public static String DESTINATION = "";
         public static double CURRENT_DISTANCE_REMAINING = 1000;
 

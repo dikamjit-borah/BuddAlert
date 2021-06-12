@@ -16,6 +16,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.hobarb.locatadora.activities.ContactsActivity;
 import com.hobarb.locatadora.activities.UserActivity;
 import com.hobarb.locatadora.models.ContactsModel;
 import com.hobarb.locatadora.models.RemindersModel;
@@ -64,6 +65,7 @@ public class FirebaseController {
                 loader.dismissAlertDialog();
             }
         });
+
     }
 
     public void addReminder(String eventDate, String eventTime, String eventName, String eventLocation)

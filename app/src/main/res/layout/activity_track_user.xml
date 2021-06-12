@@ -65,7 +65,7 @@
                     app:cardElevation="@dimen/cardElevation">
 
                     <LinearLayout
-                        android:visibility="gone"
+                        android:visibility="invisible"
                         android:id="@+id/ll_destReached_ac_track"
                         android:layout_width="match_parent"
 
@@ -76,6 +76,12 @@
                         android:background="#f44336"
                         android:gravity="center"
                         android:orientation="vertical">
+                        <ImageView
+                            android:src="@drawable/iconfinder_reached"
+                            android:layout_width="64dp"
+                            android:layout_height="64dp">
+
+                        </ImageView>
 
                         <TextView
                             android:layout_width="match_parent"
