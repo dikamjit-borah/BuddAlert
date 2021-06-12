@@ -9,4 +9,12 @@
     <string name="reminders">Reminders</string>
     <string name="helpme">Help Me!</string>
     <string name="signin">Sign In</string>
+    <string name="activity_in_vehicle">IN VEHICLE</string>
+    <string name="activity_on_bicycle">ON BICYCLE</string>
+    <string name="activity_on_foot">ON FOOT</string>
+    <string name="activity_running">RUNNING</string>
+    <string name="activity_still">STILL</string>
+    <string name="activity_tilting">TILTING</string>
+    <string name="activity_walking">WALKING</string>
+    <string name="activity_unknown">UNKNOWN ACTIVITY</string>
 </resources>

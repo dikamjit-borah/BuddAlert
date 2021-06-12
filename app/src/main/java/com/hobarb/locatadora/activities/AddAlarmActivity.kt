@@ -39,10 +39,9 @@ class AddAlarmActivity : AppCompatActivity() {
         supportActionBar!!.setTitle(R.string.location_alarm);
         serviceIntent = Intent(applicationContext, BackgroundServices::class.java)
 
-
         error_tv = findViewById(R.id.tv_error_ac_selDest)
 
-         destination = findViewById(R.id.tv_destination_ac_selDest)
+        destination = findViewById(R.id.tv_destination_ac_selDest)
         val latLong: TextView = findViewById(R.id.tv_latLong_ac_selDest)
 
         if (!Places.isInitialized()) {

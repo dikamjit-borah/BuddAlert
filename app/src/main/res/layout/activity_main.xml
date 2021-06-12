@@ -160,6 +160,14 @@
            </androidx.cardview.widget.CardView>
        </LinearLayout>
 
+       <TextView
+           android:visibility="gone"
+           android:id="@+id/tv"
+           android:textSize="42sp"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:text="yoyoyo"></TextView>
+
 
    </LinearLayout>
 </LinearLayout>

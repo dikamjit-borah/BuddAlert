@@ -89,6 +89,7 @@ class UserActivity : AppCompatActivity() {
         val df = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
         formattedDate = df.format(c)
 
+        //remToday_tv.setText(""+formattedDate)
         val delegate = "hh:mm aaa"
         //formattedTime
         //Toast.makeText(applicationContext, "" + formattedTime, Toast.LENGTH_SHORT).show()
