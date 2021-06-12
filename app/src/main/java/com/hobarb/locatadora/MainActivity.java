@@ -1,7 +1,11 @@
 package com.hobarb.locatadora;
 
+import android.Manifest;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -24,17 +28,22 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import com.google.android.gms.location.DetectedActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.common.reflect.TypeToken;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.gson.Gson;
 import com.hobarb.locatadora.activities.LoginActivity;
+import com.hobarb.locatadora.services.BackgroundDetectedActivitiesService;
 import com.hobarb.locatadora.utilities.CONSTANTS;
 import com.hobarb.locatadora.utilities.LocationUpdates;
 import com.hobarb.locatadora.utilities.SharedPrefs;
@@ -42,6 +51,7 @@ import com.hobarb.locatadora.utilities.views.Loader;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -51,6 +61,15 @@ import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class MainActivity extends AppCompatActivity {
+
+
+    public BroadcastReceiver broadcastReceiver;
+        public static String BROADCAST_DETECTED_ACTIVITY = "activity_intent";
+
+         public static long DETECTION_INTERVAL_IN_MILLISECONDS = 1000;
+
+        public static int CONFIDENCE = 70;
+
     private static final int REQUEST_AUDIO_PERMISSION_CODE = 1011;
     private static final int RQS_PICK_CONTACT = 1022;
     private MediaRecorder mRecorder;
@@ -64,7 +83,14 @@ public class MainActivity extends AppCompatActivity {
     String audioLink = "url";
     Loader loader;
 
+    TextView textView;
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver,
+                new IntentFilter(MainActivity.BROADCAST_DETECTED_ACTIVITY));
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -72,13 +98,68 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         getSupportActionBar().hide();
          loader = new Loader(MainActivity.this);
+         textView = findViewById(R.id.tv);
 
         SharedPrefs sharedPrefs = new SharedPrefs(this);
          con_name = sharedPrefs.readPrefs(CONSTANTS.SHARED_PREF_KEYS.EMERGENCY_NAME_KEY);
          con_number = sharedPrefs.readPrefs(CONSTANTS.SHARED_PREF_KEYS.EMERGENCY_NUMBER_KEY);
 
+        broadcastReceiver = new BroadcastReceiver() {
 
 
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent.getAction() == MainActivity.BROADCAST_DETECTED_ACTIVITY) {
+                    int type = intent.getIntExtra("type", -1);
+                    int confidence = intent.getIntExtra("confidence", 0);
+                    String label="";
+
+                    switch (type) {
+                        case DetectedActivity.IN_VEHICLE: {
+                            label = getString(R.string.activity_in_vehicle);
+
+                            break;
+                        }
+                        case DetectedActivity.ON_BICYCLE: {
+                            label = getString(R.string.activity_on_bicycle);
+
+                            break;
+                        }
+                        case DetectedActivity.ON_FOOT: {
+                            label = getString(R.string.activity_on_foot);
+
+                            break;
+                        }
+                        case DetectedActivity.RUNNING: {
+                            label = getString(R.string.activity_running);
+                            stopTracking();
+                            startRecording();
+                            break;
+                        }
+                        case DetectedActivity.STILL: {
+                            label = getString(R.string.activity_still);
+                            break;
+                        }
+                        case DetectedActivity.TILTING: {
+                            label = getString(R.string.activity_tilting);
+
+                            break;
+                        }
+                        case DetectedActivity.WALKING: {
+                            label = getString(R.string.activity_walking);
+
+                            break;
+                        }
+                        case DetectedActivity.UNKNOWN: {
+                            label = getString(R.string.activity_unknown);
+                            break;
+                        }
+                    }
+                    textView.setText(""  + label);
+
+                }
+            }
+        };
 
 
         findViewById(R.id.ll_signIn_ac_main).setOnClickListener(new View.OnClickListener() {
@@ -91,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         findViewById(R.id.ll_help_ac_main).setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
+            
             @Override
             public void onClick(View v) {
 
@@ -129,6 +210,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        startTracking();
+
+
+    }
+
+    private void startTracking() {
+
+        Intent intent = new Intent(this, BackgroundDetectedActivitiesService.class);
+        startService(intent);
+    }
+
+    private void stopTracking() {
+        Intent intent = new Intent(this, BackgroundDetectedActivitiesService.class);
+        stopService(intent);
     }
 
     @Override
@@ -184,7 +279,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+    
     private void startRecording() {
         mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
         Long tsLong = System.currentTimeMillis();
@@ -251,26 +346,28 @@ public class MainActivity extends AppCompatActivity {
        sms.sendMultipartTextMessage(con_number, null, parts, sendList, deliverList);
         Toast.makeText(this, "SMS sent to " + con_number, Toast.LENGTH_SHORT).show();
 
-        SharedPreferences sharedpreferences = getSharedPreferences(
-                CONSTANTS.SHARED_PREF_KEYS.APP_PREFERENCES,
-                MODE_PRIVATE
-        );
-        Set<String> set = sharedpreferences.getStringSet(CONSTANTS.SHARED_PREF_KEYS.MY_CONTACTS_KEY, null);
+        Gson gson =  new Gson();
+        String json = new SharedPrefs(this).readPrefs(CONSTANTS.SHARED_PREF_KEYS.MY_CONTACTS_KEY);
 
-        if(set != null)
+        if (!json.equals("undefined key") && !json.isEmpty() )
         {
-            Iterator value = set.iterator();
-            while (value.hasNext()) {
-                sms.sendMultipartTextMessage(value.next().toString(), null, parts, sendList, deliverList);
-                Toast.makeText(this, "SMS sent to " + value.next(), Toast.LENGTH_SHORT).show();
+            Type type =  new TypeToken<ArrayList<String>>(){}.getType();
+            ArrayList<String> contact_numbers = gson.fromJson(json, type);
+
+            for(int i = 0; i<contact_numbers.size(); i++)
+            {
+
+                sms.sendMultipartTextMessage(contact_numbers.get(i), null, parts, sendList, deliverList);
+                Toast.makeText(this, "SMS sent to " + contact_numbers.get(i), Toast.LENGTH_SHORT).show();
             }
+
         }
+        onCall();
 
 
 
-/*
 
-        List<String> stringsList = new ArrayList<>(CONSTANTS.ALARM_STUFF.MY_CONTACTS);
+      /*  List<String> stringsList = new ArrayList<>(CONSTANTS.ALARM_STUFF.MY_CONTACTS);
         if(stringsList.size()>0)
         {
             for(int i = 0; i<stringsList.size(); i++)
@@ -278,9 +375,8 @@ public class MainActivity extends AppCompatActivity {
                 SmsManager sms  = SmsManager.getDefault();
                 sms.sendTextMessage(stringsList.get(i), null, message, sentPI, deliveredPI);
             }
-        }
+        }*/
 
-*/
 
 
 
@@ -376,6 +472,16 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
                 break;
+            case 1232:
+            if ((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                onCall();
+            } else {
+                Log.d("TAG", "Call Permission Not Granted");
+            }
+            break;
+
+            default:
+                break;
         }
     }
     public boolean CheckPermissions() {
@@ -386,4 +492,18 @@ public class MainActivity extends AppCompatActivity {
     private void RequestPermissions() {
         ActivityCompat.requestPermissions(MainActivity.this, new String[]{RECORD_AUDIO, WRITE_EXTERNAL_STORAGE}, REQUEST_AUDIO_PERMISSION_CODE);
     }
+
+    public void onCall() {
+        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE);
+
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[]{Manifest.permission.CALL_PHONE},
+                    1232);
+        } else {
+            startActivity(new Intent(Intent.ACTION_CALL).setData(Uri.parse("tel:" + con_number)));
+        }
+    }
+
 }

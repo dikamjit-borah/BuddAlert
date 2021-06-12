@@ -116,6 +116,9 @@ class AddReminderActivity : AppCompatActivity() {
                 selMonth = (monthOfYear + 1).toString();
                 selYear = (year).toString();
 
+                if(selDate.toInt()<10)
+                    selDate = "0"+selDate;
+
                 //Toast.makeText(applicationContext,"Date Set" + dayOfMonth+"-"+monthOfYear,Toast.LENGTH_LONG).show()
             }
             builder.setPositiveButton("Okay") { dialogInterface, which ->
