@@ -1,7 +1,6 @@
 package com.hobarb.locatadora.activities
 
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import android.widget.LinearLayout
@@ -10,6 +9,8 @@ import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.common.api.Status
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
@@ -20,9 +21,10 @@ import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.hobarb.locatadora.R
+import com.hobarb.locatadora.adapters.ContactsAdapter
+import com.hobarb.locatadora.models.ContactsModel
 import com.hobarb.locatadora.services.BackgroundServices
 import com.hobarb.locatadora.utilities.CONSTANTS
-import com.hobarb.locatadora.utilities.CONSTANTS.SHARED_PREF_KEYS.MY_CONTACTS_KEY
 import com.hobarb.locatadora.utilities.GlobalFunctions
 import com.hobarb.locatadora.utilities.SharedPrefs
 import com.hobarb.locatadora.utilities.secrets
@@ -127,13 +129,16 @@ class AddAlarmActivity : AppCompatActivity() {
 
         findViewById<MaterialButton>(R.id.btn_setAlarm_ac_login).setOnClickListener {
             uploadToHistory(user)
-
-
+            if(switch.isChecked)
+            {
+                Toast.makeText(applicationContext, "" + CONSTANTS.ALARM_STUFF.MY_CONTACTS, Toast.LENGTH_SHORT).show()
+            }
+            else
+            {
                 fetchContacts()
 
-                //goToTrackUserActivity();
 
-
+            }
 
 
 /*
@@ -234,20 +239,7 @@ class AddAlarmActivity : AppCompatActivity() {
                         CONSTANTS.ALARM_STUFF.MY_CONTACTS.add(documentSnapshot[CONSTANTS.MAPKEYS.CONTACT_NUMBER].toString())
 
                     }
-
-                    val set: MutableSet<String> = HashSet()
-                    set.addAll(CONSTANTS.ALARM_STUFF.MY_CONTACTS)
-
-                    val sharedpreferences = getSharedPreferences(
-                        CONSTANTS.SHARED_PREF_KEYS.APP_PREFERENCES,
-                        MODE_PRIVATE
-                    )
-
-                    val editor: SharedPreferences.Editor = sharedpreferences.edit()
-                    editor.putStringSet(CONSTANTS.SHARED_PREF_KEYS.MY_CONTACTS_KEY, set)
-                    editor.commit()
-                    CONSTANTS.ALARM_STUFF.stop_alarm = false
-                    goToTrackUserActivity()
+                   // goToTrackUserActivity()
                 } else {
                     Toast.makeText(
                         applicationContext,

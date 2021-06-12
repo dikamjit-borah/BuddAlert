@@ -87,6 +87,7 @@ class UserActivity : AppCompatActivity() {
 
         val df = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
         formattedDate = df.format(c)
+        remToday_tv.text = "Reminders for today $formattedDate"
     }
 
     fun getAllReminders(){

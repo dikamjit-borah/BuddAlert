@@ -32,7 +32,7 @@
                 android:id="@+id/tv_userUid_ac_user"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Welcome"
+                android:text="User UID"
                 android:textStyle="bold" />
 
             <TextView
@@ -60,7 +60,7 @@
 
 
         <LinearLayout
-            android:layout_marginTop="70dp"
+            android:layout_marginTop="120dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -70,27 +70,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/marginParent">
-                <LinearLayout
+                <TextView
+
+                    android:id="@+id/tv_remToday_ac_user"
+                    android:text="Reminders for today"
+                    android:textColor="@color/white"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-                    <TextView
 
-                        android:id="@+id/tv_remToday_ac_user"
-                        android:text="Reminders for today"
-                        android:textColor="@color/white"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-                    </TextView>
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/white"
-                        android:layout_gravity="center">
-
-                    </View>
-
-                </LinearLayout>
+                </TextView>
                 <androidx.recyclerview.widget.RecyclerView
 
 
@@ -105,7 +93,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/marginParent"
-
 
                 android:layout_marginRight="@dimen/marginParent"
                 android:orientation="horizontal">

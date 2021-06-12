@@ -3,119 +3,103 @@
    android:layout_marginBottom="@dimen/cardBottomMargin"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content">
-   <LinearLayout
-       android:layout_margin="@dimen/marginParent"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:orientation="horizontal">
-       <ImageView
-           android:layout_marginRight="8dp"
-           android:layout_gravity="center"
-           android:src="@drawable/iconfinder_reminder"
-           android:layout_width="@dimen/card_icon"
-           android:layout_height="@dimen/card_icon">
+    <LinearLayout
+        android:layout_margin="@dimen/marginParent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-       </ImageView>
-       <LinearLayout
+        <LinearLayout
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:orientation="horizontal">
+                <TextView
+                    android:textStyle="bold"
 
-           <LinearLayout
-               android:layout_weight="1"
-               android:orientation="vertical"
-               android:layout_width="0dp"
-               android:layout_height="wrap_content">
-               <LinearLayout
-                   android:layout_gravity="center"
-                   android:gravity="center"
-                   android:orientation="horizontal"
-                   android:layout_width="match_parent"
-                   android:layout_height="wrap_content">
+                    android:layout_margin="1dp"
+                    android:id="@+id/tv_eventTime_ca_rem"
+                    android:text="Event Time"
+                    android:gravity="end"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content">
 
-                   <TextView
-                       android:textStyle="bold"
+                </TextView>
 
-                       android:layout_margin="1dp"
-                       android:id="@+id/tv_eventTime_ca_rem"
-                       android:text="Event Time"
-                       android:gravity="end"
-                       android:layout_width="0dp"
-                       android:layout_weight="1"
-                       android:layout_height="wrap_content">
+                <TextView
 
-                   </TextView>
+                    android:gravity="start"
+                    android:layout_margin="1dp"
+                    android:id="@+id/tv_eventDate_ca_rem"
+                    android:text="Event Date"
 
-                   <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content">
 
-                       android:gravity="start"
-                       android:layout_margin="1dp"
-                       android:id="@+id/tv_eventDate_ca_rem"
-                       android:text="Event Date"
-
-                       android:layout_width="0dp"
-                       android:layout_weight="1"
-                       android:layout_height="wrap_content">
-
-                   </TextView>
+                </TextView>
 
 
-               </LinearLayout>
+            </LinearLayout>
 
-               <LinearLayout
-                   android:gravity="center"
-                   android:layout_width="match_parent"
-                   android:layout_height="wrap_content"
-                   android:orientation="horizontal">
-                   <ImageView
+            <LinearLayout
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <ImageView
 
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content">
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
-                   </ImageView>
-                   <TextView
-                       android:textColor="@color/black"
-                       android:id="@+id/tv_eventName_ca_rem"
-                       android:textSize="@dimen/titleSize"
-                       android:text="Event Name"
-                       android:textAlignment="textEnd"
-                       android:layout_width="match_parent"
-                       android:layout_height="wrap_content">
+                </ImageView>
+                <TextView
+                    android:textColor="@color/black"
+                    android:id="@+id/tv_eventName_ca_rem"
+                    android:textSize="@dimen/titleSize"
+                    android:text="Event Name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-                   </TextView>
-               </LinearLayout>
+                </TextView>
+            </LinearLayout>
 
-               <LinearLayout
-                   android:gravity="center"
-                   android:layout_width="match_parent"
-                   android:layout_height="wrap_content"
-                   android:orientation="horizontal">
-                   <ImageView
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       >
+            <LinearLayout
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                   >
 
-                   </ImageView>
-                   <TextView
-                       android:textAlignment="textEnd"
-                       android:id="@+id/tv_eventLocation_ca_rem"
-                       android:layout_width="match_parent"
-                       android:layout_height="wrap_content"
-                       android:text="Location">
+                </ImageView>
+                <TextView
+                    android:id="@+id/tv_eventLocation_ca_rem"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Location">
 
-                   </TextView>
+                </TextView>
 
-               </LinearLayout>
-           </LinearLayout>
-           <ImageView
-               android:visibility="gone"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:src="@drawable/ic_baseline_close_24">
+            </LinearLayout>
+        </LinearLayout>
+        <ImageView
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_close_24">
 
-           </ImageView>
-       </LinearLayout>
-   </LinearLayout>
+        </ImageView>
+    </LinearLayout>
 
 </androidx.cardview.widget.CardView>
