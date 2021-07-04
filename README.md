@@ -1,4 +1,4 @@
-# LocataDora
+# BuddAlert
 ## Demo -> https://www.youtube.com/watch?v=UYK8agCXa5g
 
 ## About
